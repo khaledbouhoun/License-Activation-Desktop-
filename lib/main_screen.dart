@@ -120,11 +120,7 @@ class MainScreen extends GetView<DashboardController> {
                     label: 'Applications',
                     route: '/applications',
                   ),
-                  _buildNavItem(
-                    icon: Icons.devices_outlined,
-                    label: 'Devices',
-                    route: '/devices',
-                  ),
+
                   _buildNavItem(
                     icon: Icons.settings_outlined,
                     label: 'Settings',
@@ -304,7 +300,6 @@ class MainScreen extends GetView<DashboardController> {
       'Subscriptions',
       'Clients',
       'Applications',
-      'Devices',
       'Settings',
     ];
 
