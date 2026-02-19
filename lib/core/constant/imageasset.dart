@@ -1,0 +1,151 @@
+class AppImageAsset {
+  static const String rootImages = "assets/img";
+  // static const String rootLottie = "assets/lottie";
+  static const String logo = "$rootImages/logo.png";
+  // static const String onBoardingImageOne = "$rootImages/one.PNG";
+  // static const String onBoardingImageTwo = "$rootImages/two.PNG";
+  // static const String onBoardingImageThree = "$rootImages/three.PNG";
+
+  // static const String saleOne = "$rootImages/001-sale.png";
+  // static const String saleTwo = "$rootImages/002-sale-tag.png";
+  // static const String saleThree = "$rootImages/003-sale-1.png";
+
+  // static const String ecommerce = "$rootLottie/ecommerce.json";
+  // static const String loading = "$rootLottie/cart.json";
+  // static const String offline = "$rootLottie/offline.json";
+  // static const String noData = "$rootLottie/nodata.json";
+  // static const String server = "$rootLottie/server.json";
+
+  // static const String avatar = "$rootImages/avatar.png";
+
+  // static const String drivethruImage = "$rootImages/drivethru.png";
+  // static const String deliveryImage = "$rootImages/005-delivery-man.png";
+  // static const String deliveryImage2 = "$rootImages/006-delivery.png";
+
+  // static const String yallidine = "$rootImages/yallidine.jpg";
+  // static const String cash = "$rootImages/cash.jpg";
+
+  // static const String offer1 = "$rootImages/offer1.png";
+  // static const String offer2 = "$rootImages/offer2.png";
+  // static const String offer3 = "$rootImages/offer3.png";
+}
+
+class AppSvg {
+  static const String rootSvg = "assets/svg";
+  static const String add = "$rootSvg/add.svg";
+  static const String backArrow = "$rootSvg/back_arrow.svg";
+  static const String call = "$rootSvg/call.svg";
+  static const String cart = "$rootSvg/cart.svg";
+  static const String cart2 = "$rootSvg/cart2.svg";
+  static const String check = "$rootSvg/check.svg";
+  static const String delete = "$rootSvg/delete.svg";
+  static const String email = "$rootSvg/email.svg";
+  static const String eyeoff = "$rootSvg/eyec.svg";
+  static const String eyeon = "$rootSvg/eyep.svg";
+  static const String facebook = "$rootSvg/facebook.svg";
+  static const String favorite = "$rootSvg/favorite.svg";
+  static const String home = "$rootSvg/home.svg";
+  static const String home2 = "$rootSvg/home2.svg";
+  static const String instagram = "$rootSvg/instagram.svg";
+  static const String l = "$rootSvg/l_arrow.svg";
+  static const String language = "$rootSvg/language.svg";
+  static const String location = "$rootSvg/location.svg";
+  static const String location2 = "$rootSvg/location2.svg";
+  static const String logo = "$rootSvg/logo.svg";
+  static const String logout = "$rootSvg/logout.svg";
+  static const String newSvg = "$rootSvg/new.svg";
+  static const String notification = "$rootSvg/notification.svg";
+  static const String notification2 = "$rootSvg/notification2.svg";
+  static const String order = "$rootSvg/order.svg";
+  static const String profile = "$rootSvg/profile.svg";
+  static const String r = "$rootSvg/r_arrow.svg";
+  static const String search = "$rootSvg/search.svg";
+  static const String share = "$rootSvg/share.svg";
+  static const String tiktok = "$rootSvg/tik_tok.svg";
+  static const String whatsapp = "$rootSvg/whatsapp.svg";
+  static const String yallidine = "$rootSvg/yallidine.svg";
+  static const String addCirclePlusSvgrepoCom = "$rootSvg/add-circle-plus-svgrepo-com.svg";
+  static const String addCircleSvgrepoCom = "$rootSvg/add-circle-svgrepo-com.svg";
+  static const String addCircleSvgrepoCom1 = "$rootSvg/add-circle-svgrepo-com (1).svg";
+  static const String addFolderSvgrepoCom = "$rootSvg/add-folder-svgrepo-com.svg";
+  static const String addSvgrepoCom = "$rootSvg/add-svgrepo-com.svg";
+  static const String back = "$rootSvg/back.svg";
+  static const String bag3SvgrepoCom = "$rootSvg/bag-3-svgrepo-com.svg";
+  static const String bag3SvgrepoCom1 = "$rootSvg/bag-3-svgrepo-com (1).svg";
+  static const String bell = "$rootSvg/bell.svg";
+  static const String bell2 = "$rootSvg/bell2.svg";
+  static const String calendarDateSvgrepoCom = "$rootSvg/calendar-date-svgrepo-com.svg";
+  static const String cameraAddSvgrepoCom = "$rootSvg/camera-add-svgrepo-com.svg";
+  static const String cartPlusSvgrepoCom = "$rootSvg/cart-plus-svgrepo-com.svg";
+  static const String chartSvgrepoCom = "$rootSvg/chart-svgrepo-com.svg";
+  static const String chartSvgrepoCom1 = "$rootSvg/chart-svgrepo-com (1).svg";
+  static const String chartoCom = "$rootSvg/chart-svgrepo-com.svg";
+  static const String citySvgrepoCom = "$rootSvg/city-svgrepo-com.svg";
+  static const String clockSvgrepoCom = "$rootSvg/clock-svgrepo-com.svg";
+  static const String contact = "$rootSvg/contact.svg";
+  static const String bag = "$rootSvg/case-round-minimalistic-svgrepo-com.svg";
+  static const String bag2 = "$rootSvg/case-minimalistic-svgrepo-com.svg";
+  static const String documentAddSvgrepoCom = "$rootSvg/document-add-svgrepo-com.svg";
+  static const String document = "$rootSvg/document.svg";
+  static const String downloadSquareSvgrepoCom = "$rootSvg/download-square-svgrepo-com.svg";
+  static const String dz = "$rootSvg/dz.svg";
+  static const String edit3SvgrepoCom = "$rootSvg/edit-3-svgrepo-com.svg";
+  static const String eyec = "$rootSvg/eyec.svg";
+  static const String eyep = "$rootSvg/eyep.svg";
+  static const String fav = "$rootSvg/fav.svg";
+  static const String finger = "$rootSvg/finger-print-outline-svgrepo-com.svg";
+  static const String filterSvgrepoCom = "$rootSvg/filter-svgrepo-com.svg";
+  static const String filterSvgrepoCom1 = "$rootSvg/filter-svgrepo-com (1).svg";
+  static const String folderWithFilesSvgrepoCom = "$rootSvg/folder-with-files-svgrepo-com.svg";
+  static const String folderWithFilesSvgrepoCom2 = "$rootSvg/folder-with-files-svgrepo-com (1).svg";
+  static const String fr = "$rootSvg/fr.svg";
+  static const String galleryAddSvgrepoCom = "$rootSvg/gallery-add-svgrepo-com.svg";
+  static const String galleryRemoveSvgrepoCom = "$rootSvg/gallery-remove-svgrepo-com.svg";
+  static const String gallerysvgrepocom = "$rootSvg/gallery-svgrepo-com.svg";
+  static const String gb = "$rootSvg/gb.svg";
+  static const String google = "$rootSvg/Google.svg";
+  static const String heartSvgrepoCom = "$rootSvg/heart-svgrepo-com.svg";
+  static const String heart2 = "$rootSvg/heart2.svg";
+  static const String homee = "$rootSvg/homee.svg";
+  static const String info = "$rootSvg/info.svg";
+  static const String lockKeyholeMinimalisticSvgrepoCom = "$rootSvg/lock-keyhole-minimalistic-svgrepo-com.svg";
+  static const String lockKeyholeMinimalisticSvgrepoCom1 = "$rootSvg/lock-keyhole-minimalistic-svgrepo-com (1).svg";
+  static const String lock = "$rootSvg/lock.svg";
+  static const String ticket = "$rootSvg/receipt-item-svgrepo-com.svg";
+  static const String loction = "$rootSvg/loction.svg";
+  static const String lArrow = "$rootSvg/l_arrow.svg";
+  static const String map = "$rootSvg/map.svg";
+  static const String minusCircleSvgrepoCom = "$rootSvg/minus-circle-svgrepo-com.svg";
+  static const String notificationLinesRemoveSvgrepoCom = "$rootSvg/notification-lines-remove-svgrepo-com.svg";
+  static const String paletteSvgrepoCom = "$rootSvg/palette-svgrepo-com.svg";
+  static const String profileAddSvgrepoCom = "$rootSvg/profile-add-svgrepo-com.svg";
+  static const String phoneSvgrepoCom = "$rootSvg/phone-svgrepo-com (1).svg";
+  static const String qrCodeSvgrepoCom = "$rootSvg/qr-code-svgrepo-com.svg";
+  static const String rArrow = "$rootSvg/r_arrow.svg";
+  static const String rulerAngularSvgrepoCom = "$rootSvg/ruler-angular-svgrepo-com.svg";
+  static const String settingsSvgrepoCom = "$rootSvg/settings-svgrepo-com.svg";
+  static const String settingsSvgrepoCom1 = "$rootSvg/settings-svgrepo-com (1).svg";
+  static const String shop2SvgrepoCom = "$rootSvg/shop-2-svgrepo-com.svg";
+  static const String shop2SvgrepoCom1 = "$rootSvg/shop-2-svgrepo-com (1).svg";
+  static const String sortByTimeSvgrepoCom = "$rootSvg/sort-by-time-svgrepo-com.svg";
+  static const String subtractCircleMinusRemoveSvgrepoCom = "$rootSvg/subtract-circle-minus-remove-svgrepo-com.svg";
+  static const String trashBinTrashSvgrepoCom = "$rootSvg/trash-bin-trash-svgrepo-com.svg";
+  static const String truckSvgrepoCom = "$rootSvg/truck-svgrepo-com.svg";
+  static const String truckTickSvgrepoCom = "$rootSvg/truck-tick-svgrepo-com.svg";
+  static const String truckTickSvgrepoCom2 = "$rootSvg/truck-tick-svgrepo-com (1).svg";
+  static const String truckTimeSvgrepoCom = "$rootSvg/truck-time-svgrepo-com.svg";
+  static const String userBlockSvgrepoCom = "$rootSvg/user-block-svgrepo-com.svg";
+  static const String userIdSvgrepoCom = "$rootSvg/user-id-svgrepo-com.svg";
+  static const String userSvgrepoCom = "$rootSvg/user-svgrepo-com.svg";
+  static const String user = "$rootSvg/user.svg";
+  static const String user2 = "$rootSvg/user2.svg";
+  static const String weightSvgrepoCom = "$rootSvg/weigher-svgrepo-com.svg";
+  static const String widget2SvgrepoCom = "$rootSvg/widget-2-svgrepo-com.svg";
+  static const String widget2SvgrepoCom1 = "$rootSvg/widget-2-svgrepo-com (1).svg";
+  static const String widgetAddSvgrepoCom = "$rootSvg/widget-add-svgrepo-com.svg";
+}
+
+class AppLottie {
+  static const String rootLottie = "assets/lottie";
+  static const String error = "$rootLottie/error.json";
+}
