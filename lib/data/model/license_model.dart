@@ -20,19 +20,20 @@ class LicenseModel {
   });
 
   factory LicenseModel.fromJson(Map<String, dynamic> json) {
+    print(json['last_sync_date']);
     return LicenseModel(
       id: json['id'] ?? 0,
       subscriptionId: json['subscription_id'] ?? 0,
       deviceId: json['device_id'],
       deviceModel: json['device_model'],
       lastSyncDate: json['last_sync_date'] != null
-          ? DateTime.parse(json['last_sync_date'])
+          ? DateTime.parse(json['last_sync_date']).toLocal()
           : null,
       startDate: json['start_date'] != null
-          ? DateTime.parse(json['start_date'])
+          ? DateTime.parse(json['start_date']).toLocal()
           : null,
       expiryDate: json['expiry_date'] != null
-          ? DateTime.parse(json['expiry_date'])
+          ? DateTime.parse(json['expiry_date']).toLocal()
           : null,
     );
   }

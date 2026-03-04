@@ -45,16 +45,16 @@ class SubscriptionModel {
       maxDevices: json['max_devices'],
       duration: json['duration'],
       startDate: json['start_date'] != null
-          ? DateTime.parse(json['start_date'])
+          ? DateTime.parse(json['start_date']).toLocal()
           : null,
       expiryDate: json['expiry_date'] != null
-          ? DateTime.parse(json['expiry_date'])
+          ? DateTime.parse(json['expiry_date']).toLocal()
           : null,
       isActive: isActiveVar == 1
           ? SubscriptionActive.active
           : SubscriptionActive.inactive,
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
+      createdAt: DateTime.parse(json['created_at']).toLocal(),
+      updatedAt: DateTime.parse(json['updated_at']).toLocal(),
       licensesCount: json['licenses_count'] ?? 0,
     );
   }

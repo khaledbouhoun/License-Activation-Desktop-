@@ -22,23 +22,32 @@ class LicensesView extends StatelessWidget {
           icon: const Icon(Icons.arrow_back, color: AppTheme.textPrimary),
           onPressed: () => Get.back(),
         ),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        title: Row(
+          mainAxisAlignment: .spaceBetween,
           children: [
-            const Text(
-              'Managed Licenses',
-              style: TextStyle(
-                color: AppTheme.textPrimary,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Managed Licenses',
+                  style: TextStyle(
+                    color: AppTheme.textPrimary,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'Subscription: ${controller.subscription.licenseKey}',
+                  style: const TextStyle(
+                    color: AppTheme.textSecondary,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
             ),
-            Text(
-              'Subscription: ${controller.subscription.licenseKey}',
-              style: const TextStyle(
-                color: AppTheme.textSecondary,
-                fontSize: 12,
-              ),
+            IconButton(
+              onPressed: () => controller.loadLicenses(),
+              icon: Icon(Icons.refresh_rounded),
             ),
           ],
         ),
@@ -313,19 +322,19 @@ class LicensesView extends StatelessWidget {
               children: [
                 _buildActionButton(
                   icon: Icons.delete_forever,
-                  tooltip: 'Revoke License',
+                  tooltip: 'Remove License',
                   color: AppTheme.errorRed,
                   onTap: () {
                     Get.defaultDialog(
-                      title: "Revoke License",
+                      title: "Remove License",
                       middleText:
-                          "Are you sure you want to revoke this license? The device will no longer be able to sync.",
-                      textConfirm: "Revoke",
+                          "Are you sure you want to Remove this license? The device will no longer be able to sync.",
+                      textConfirm: "Remove",
                       confirmTextColor: Colors.white,
                       buttonColor: AppTheme.errorRed,
                       onConfirm: () {
                         Get.back();
-                        controller.revokeLicense(license);
+                        controller.removeLicense(license);
                       },
                       textCancel: "Cancel",
                       cancelTextColor: AppTheme.textPrimary,

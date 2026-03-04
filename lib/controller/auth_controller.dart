@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:get/get.dart';
+import 'package:softel_control/main_screen.dart';
 
 class AuthController extends GetxController {
   TextEditingController emailController = TextEditingController();
@@ -13,7 +14,7 @@ class AuthController extends GetxController {
 
   RxBool isLoading = false.obs;
   RxBool hidePassword = true.obs;
-
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
   MyServices myServices = Get.find();
 
   // Show/Hide Password
@@ -23,68 +24,8 @@ class AuthController extends GetxController {
 
   // Login
   Future<void> login() async {
-    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
-      Get.snackbar(
-        "Error",
-        "Please fill in all fields",
-        snackPosition: SnackPosition.BOTTOM,
-      );
-      return;
-    }
-
-    isLoading.value = true;
-    try {
-      var response = await http.post(
-        Uri.parse(AppLink.login),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'X-DESKTOP-APP-KEY':
-              AppLink.desktopAppKey, // If required for login too
-        },
-        body: jsonEncode({
-          "email": emailController.text,
-          "password": passwordController.text,
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        var body = jsonDecode(response.body);
-        if (body['token'] != null) {
-          String token = body['token'];
-          // Save token
-          await myServices.sharedPreferences.setString("token", token);
-          // Save user info if needed
-          if (body['user'] != null) {
-            await myServices.sharedPreferences.setString(
-              "user",
-              jsonEncode(body['user']),
-            );
-          }
-
-          Get.offAllNamed(AppRoute.mainScreen);
-        } else {
-          Get.snackbar(
-            "Error",
-            "Login failed: No token returned",
-            snackPosition: SnackPosition.BOTTOM,
-          );
-        }
-      } else {
-        Get.snackbar(
-          "Error",
-          "Login failed: ${response.statusCode}",
-          snackPosition: SnackPosition.BOTTOM,
-        );
-      }
-    } catch (e) {
-      Get.snackbar(
-        "Error",
-        "Exception: $e",
-        snackPosition: SnackPosition.BOTTOM,
-      );
-    } finally {
-      isLoading.value = false;
+    if (formKey.currentState!.validate()) {
+      Get.offAll(MainScreen());
     }
   }
 

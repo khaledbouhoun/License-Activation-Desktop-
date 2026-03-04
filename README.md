@@ -11,7 +11,7 @@
 ## ✨ Key Features
 
 - **📊 Dynamic Dashboard**: Real-time stats with animated progress tracking and recent activity logs.
-- **📋 License Management**: Comprehensive system to generate, edit, and revoke license keys.
+- **📋 License Management**: Comprehensive system to generate, edit, and Remove license keys.
 - **👥 Client Management**: Built-in views for managing client details and their associated subscriptions.
 - **🎨 Premium UI/UX**: 
   - Sleek Dark Mode interface.

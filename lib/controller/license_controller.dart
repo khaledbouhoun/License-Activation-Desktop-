@@ -63,24 +63,22 @@ class LicenseController extends GetxController {
     }
   }
 
-  Future<void> revokeLicense(LicenseModel license) async {
+  Future<void> removeLicense(LicenseModel license) async {
     try {
       // Assuming endpoint exists for revoking a specific license
-      var response = await authPost(AppLink.subscriptionRevokeLicense, {
-        "license_id": license.id,
-      });
+      var response = await authDelete("${AppLink.licenses}/${license.id}", {});
 
       if (response.statusCode == 200) {
         Get.snackbar(
           'Success',
-          'License revoked successfully',
+          'License Removed successfully',
           snackPosition: SnackPosition.BOTTOM,
         );
         await loadLicenses();
       } else {
         Get.snackbar(
           'Error',
-          'Failed to revoke: ${response.body}',
+          'Failed to Remove: ${response.body}',
           snackPosition: SnackPosition.BOTTOM,
         );
       }

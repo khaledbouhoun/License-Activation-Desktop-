@@ -167,6 +167,10 @@ class AppTheme {
         ),
       ),
     ),
+    snackBarTheme: SnackBarThemeData(
+      backgroundColor: primaryBlue,
+      contentTextStyle: const TextStyle(color: Colors.white),
+    ),
   );
 
   // Gradient Backgrounds

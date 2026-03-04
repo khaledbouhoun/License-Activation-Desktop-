@@ -499,13 +499,13 @@ class SubscriptionView extends GetView<SubscriptionController> {
           Expanded(
             flex: 2,
             child: Row(
-              spacing: 20,
+              mainAxisAlignment: .spaceBetween,
               children: [
                 Text(
                   subscription.licenseKey,
                   style: const TextStyle(
                     color: AppTheme.textSecondary,
-                    fontSize: 16,
+                    fontSize: 15,
                     fontFamily: 'monospace',
                   ),
                 ),

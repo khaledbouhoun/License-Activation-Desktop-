@@ -167,37 +167,7 @@ class SubscriptionController extends GetxController {
     }
   }
 
-  // Generate license key
-  Future<void> generateLicenseKey(SubscriptionModel subscription) async {
-    try {
-      // API call to generate license
-      var response = await authPost(AppLink.subscriptionGenerateLicense, {
-        "subscription_id": subscription.id,
-      });
-
-      if (response.statusCode == 200) {
-        Get.snackbar(
-          'Success',
-          'License key generated successfully',
-          snackPosition: SnackPosition.BOTTOM,
-        );
-        await loadSubscriptions();
-      } else {
-        Get.snackbar(
-          'Error',
-          'Failed to generate: ${response.body}',
-          snackPosition: SnackPosition.BOTTOM,
-        );
-      }
-    } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Exception generating license key: $e',
-        snackPosition: SnackPosition.BOTTOM,
-      );
-    }
-  }
-
+  
   // Copy license key
   void copyLicenseKey(String licenseKey) {
     Clipboard.setData(ClipboardData(text: licenseKey));

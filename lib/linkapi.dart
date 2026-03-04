@@ -1,5 +1,5 @@
 class AppLink {
-  static const String server = "http://127.0.0.1:8000/api";
+  static const String server = "https://licenseactivation.softel.dz/api";
 
   // Auth
   static const String login = "$server/login";
@@ -11,11 +11,6 @@ class AppLink {
 
   // Subscriptions
   static const String subscriptions = "$server/subscriptions";
-  static const String subscriptionGenerateLicense =
-      "$server/subscriptions/generate-license";
-  static const String subscriptionRevokeLicense =
-      "$server/subscriptions/revoke-license";
-
   // Clients
   static const String clients = "$server/clients";
 
@@ -26,6 +21,6 @@ class AppLink {
   static const String licenses = "$server/licenses";
 
   // Desktop App Key
-  static const String desktopAppKey =
-      "SqD/Lxalu9SeUO5hcQX/rx3RfIU+mtYtZiQUJXSFZJU="; // Replace with real key
+
+  static const String desktopAppKey = String.fromEnvironment('DESKTOP_APP_KEY');
 }

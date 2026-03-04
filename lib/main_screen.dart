@@ -9,6 +9,7 @@ import 'package:softel_control/view/settings/settings_view.dart';
 import 'package:softel_control/view/subscription/subscription_view.dart';
 import 'package:softel_control/view/client/client_view.dart';
 import 'package:softel_control/view/application/application_view.dart';
+import 'package:softel_control/widget/modrentopbar.dart';
 
 class MainScreen extends GetView<DashboardController> {
   const MainScreen({super.key});
@@ -18,35 +19,41 @@ class MainScreen extends GetView<DashboardController> {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(gradient: AppTheme.backgroundGradient),
-        child: Row(
+        child: Column(
+          // Use a Column here to stack TopBar above the rest
           children: [
-            // Sidebar Navigation
-            _buildSidebar(),
+            // 1. THE MODERN TOP BAR (Stretches full width)
+            const ModernTopBar(),
 
-            // Main Content Area
+            // 2. THE REST OF THE APP (Sidebar + Content)
             Expanded(
-              child: Column(
+              child: Row(
                 children: [
-                  // Top Bar
-                  _buildTopBar(),
+                  // Sidebar Navigation
+                  _buildSidebar(),
 
-                  // Content
+                  // Main Content Area
                   Expanded(
-                    child: Obx(
-                      () => AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 300),
-                        transitionBuilder:
-                            (Widget child, Animation<double> animation) {
-                              return FadeTransition(
-                                opacity: animation,
-                                child: child,
-                              );
-                            },
-                        child: KeyedSubtree(
-                          key: ValueKey<int>(controller.selectedIndex.value),
-                          child: _getSelectedView(),
+                    child: Column(
+                      children: [
+                        // Sub-Header (Breadcrumbs/Search)
+                        _buildTopBar(),
+
+                        // Page Content
+                        Expanded(
+                          child: Obx(
+                            () => AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 300),
+                              child: KeyedSubtree(
+                                key: ValueKey<int>(
+                                  controller.selectedIndex.value,
+                                ),
+                                child: _getSelectedView(),
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                   ),
                 ],
@@ -121,11 +128,11 @@ class MainScreen extends GetView<DashboardController> {
                     route: '/applications',
                   ),
 
-                  _buildNavItem(
-                    icon: Icons.settings_outlined,
-                    label: 'Settings',
-                    route: '/settings',
-                  ),
+                  // _buildNavItem(
+                  //   icon: Icons.settings_outlined,
+                  //   label: 'Settings',
+                  //   route: '/settings',
+                  // ),
                 ],
               ),
             ),
@@ -253,41 +260,6 @@ class MainScreen extends GetView<DashboardController> {
                 ),
               ),
             ).animate().fadeIn(delay: 200.ms),
-
-            const SizedBox(width: 16),
-
-            // Notifications
-            IconButton(
-              onPressed: () {},
-              icon: Stack(
-                children: [
-                  const Icon(
-                    Icons.notifications_outlined,
-                    color: AppTheme.textSecondary,
-                    size: 24,
-                  ),
-                  Positioned(
-                    right: 0,
-                    top: 0,
-                    child: Container(
-                      width: 8,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        color: AppTheme.errorRed,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppTheme.errorRed.withValues(alpha: 0.5),
-                            blurRadius: 4,
-                            spreadRadius: 1,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ).animate().fadeIn(delay: 300.ms),
           ],
         ),
       ),
@@ -300,7 +272,7 @@ class MainScreen extends GetView<DashboardController> {
       'Subscriptions',
       'Clients',
       'Applications',
-      'Settings',
+      // 'Settings',
     ];
 
     return Row(
@@ -331,8 +303,8 @@ class MainScreen extends GetView<DashboardController> {
         return const ClientView();
       case 3:
         return const ApplicationView();
-      case 5:
-        return const SettingsView();
+      // case 5:
+      //   return const SettingsView();
       default:
         return Center(
           child: Column(
