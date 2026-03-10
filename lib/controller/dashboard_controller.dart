@@ -2,12 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:softel_control/controller/client_controller.dart';
 import 'package:softel_control/controller/subscription_controller.dart';
 import 'package:softel_control/controller/application_controller.dart';
-import 'dart:math';
-
 import 'package:softel_control/core/functions/auth_post.dart';
 import 'package:softel_control/data/model/license_model.dart';
 import 'package:softel_control/linkapi.dart';

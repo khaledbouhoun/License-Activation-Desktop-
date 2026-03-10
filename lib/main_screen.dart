@@ -4,8 +4,6 @@ import 'package:get/get.dart';
 import 'package:softel_control/controller/dashboard_controller.dart';
 import 'package:softel_control/core/constant/app_theme.dart';
 import 'package:softel_control/view/dashboard/dashboard_view.dart';
-import 'package:softel_control/view/settings/settings_view.dart';
-
 import 'package:softel_control/view/subscription/subscription_view.dart';
 import 'package:softel_control/view/client/client_view.dart';
 import 'package:softel_control/view/application/application_view.dart';
@@ -20,26 +18,16 @@ class MainScreen extends GetView<DashboardController> {
       body: Container(
         decoration: BoxDecoration(gradient: AppTheme.backgroundGradient),
         child: Column(
-          // Use a Column here to stack TopBar above the rest
           children: [
-            // 1. THE MODERN TOP BAR (Stretches full width)
             const ModernTopBar(),
-
-            // 2. THE REST OF THE APP (Sidebar + Content)
             Expanded(
               child: Row(
                 children: [
-                  // Sidebar Navigation
                   _buildSidebar(),
-
-                  // Main Content Area
                   Expanded(
                     child: Column(
                       children: [
-                        // Sub-Header (Breadcrumbs/Search)
                         _buildTopBar(),
-
-                        // Page Content
                         Expanded(
                           child: Obx(
                             () => AnimatedSwitcher(

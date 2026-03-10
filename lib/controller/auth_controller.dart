@@ -4,7 +4,6 @@ import 'package:softel_control/core/constant/routesstr.dart';
 import 'package:softel_control/linkapi.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:softel_control/main_screen.dart';
 
