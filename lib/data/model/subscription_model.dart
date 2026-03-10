@@ -1,9 +1,12 @@
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class SubscriptionModel {
   final int id;
   final int clientId;
   final String clientName;
+  final String clientEmail;
+  final String clientPhone;
   final int applicationId;
   final String applicationName;
   final String licenseKey;
@@ -14,12 +17,14 @@ class SubscriptionModel {
   final SubscriptionActive isActive;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final int licensesCount;
+  RxInt licensesCount = 0.obs;
 
   SubscriptionModel({
     required this.id,
     required this.clientId,
     required this.clientName,
+    required this.clientEmail,
+    required this.clientPhone,
     required this.applicationId,
     required this.applicationName,
     required this.licenseKey,
@@ -39,6 +44,8 @@ class SubscriptionModel {
       id: json['id'],
       clientId: json['client_id'],
       clientName: json['client']?['name'] ?? '',
+      clientEmail: json['client']?['email'] ?? '',
+      clientPhone: json['client']?['phone'] ?? '',
       applicationId: json['application_id'],
       applicationName: json['application']?['name'] ?? '',
       licenseKey: json['license_key'],
@@ -55,7 +62,7 @@ class SubscriptionModel {
           : SubscriptionActive.inactive,
       createdAt: DateTime.parse(json['created_at']).toLocal(),
       updatedAt: DateTime.parse(json['updated_at']).toLocal(),
-      licensesCount: json['licenses_count'] ?? 0,
+      licensesCount: RxInt(json['licenses_count'] ?? 0),
     );
   }
 
@@ -74,6 +81,8 @@ class SubscriptionModel {
     int? id,
     int? clientId,
     String? clientName,
+    String? clientEmail,
+    String? clientPhone,
     int? applicationId,
     String? applicationName,
     String? licenseKey,
@@ -89,6 +98,8 @@ class SubscriptionModel {
       id: id ?? this.id,
       clientId: clientId ?? this.clientId,
       clientName: clientName ?? this.clientName,
+      clientEmail: clientEmail ?? this.clientEmail,
+      clientPhone: clientPhone ?? this.clientPhone,
       applicationId: applicationId ?? this.applicationId,
       applicationName: applicationName ?? this.applicationName,
       licenseKey: licenseKey ?? this.licenseKey,

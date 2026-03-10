@@ -113,16 +113,6 @@ class ApplicationView extends GetView<ApplicationController> {
                             );
                           },
                         ),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.delete,
-                            color: AppTheme.errorRed,
-                          ),
-                          onPressed: () => showDialog(
-                            context: context,
-                            builder: (_) => _dialogConfirmDelete(application),
-                          ),
-                        ),
                       ],
                     ),
                   );
@@ -132,26 +122,6 @@ class ApplicationView extends GetView<ApplicationController> {
           ),
         ],
       ),
-    );
-  }
-
-  AlertDialog _dialogConfirmDelete(ApplicationModel application) {
-    return AlertDialog(
-      title: const Text("Delete Application"),
-      content: const Text("Are you sure you want to delete this application?"),
-      actions: [
-        TextButton(onPressed: () => Get.back(), child: const Text("Cancel")),
-        TextButton(
-          onPressed: () {
-            controller.deleteApplication(application);
-            Get.back();
-          },
-          child: const Text(
-            "Delete",
-            style: TextStyle(color: AppTheme.errorRed),
-          ),
-        ),
-      ],
     );
   }
 }

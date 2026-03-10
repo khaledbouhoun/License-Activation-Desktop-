@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:softel_control/controller/subscription_controller.dart';
@@ -15,7 +16,6 @@ class SubscriptionView extends GetView<SubscriptionController> {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(SubscriptionController());
     return Obx(() {
       if (controller.isLoading.value) {
         return const Center(
@@ -83,44 +83,91 @@ class SubscriptionView extends GetView<SubscriptionController> {
         const Spacer(),
 
         // Add New Button
-        MouseRegion(
-          cursor: SystemMouseCursors.click,
-          child: GestureDetector(
-            onTap: () {
-              Get.dialog(const AddEditSubscriptionDialog());
-            },
-            child:
-                Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 14,
-                      ),
-                      decoration: BoxDecoration(
-                        gradient: AppTheme.primaryGradient,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: AppTheme.glowShadow,
-                      ),
-                      child: Row(
-                        children: const [
-                          Icon(Icons.add, color: Colors.white, size: 20),
-                          SizedBox(width: 8),
-                          Text(
-                            'Add Subscription',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                    .animate(onPlay: (ctrl) => ctrl.repeat(reverse: true))
-                    .shimmer(delay: 2000.ms, duration: 1500.ms),
+        _actionButton(
+          () {
+            controller.sendBulkEmail();
+          },
+          'Send Email',
+          FaIcon(
+            FontAwesomeIcons.google,
+            color: Colors.white, // WhatsApp green
+            size: 20,
           ),
-        ).animate().fadeIn(delay: 300.ms),
+          AppTheme.redGradient,
+          AppTheme.redGlowShadow,
+        ),
+        _actionButton(
+          () {
+            controller.sendBulkWhatsApp();
+          },
+          'Send WhatsApp',
+          FaIcon(
+            FontAwesomeIcons.whatsapp,
+            color: Colors.white, // WhatsApp green
+            size: 20,
+          ),
+          AppTheme.accentGradient,
+          AppTheme.greenGlowShadow,
+        ),
+        _actionButton(
+          () {
+            Get.dialog(const AddEditSubscriptionDialog());
+          },
+          'Add Subscription',
+          FaIcon(
+            FontAwesomeIcons.plus,
+            color: Colors.white, // WhatsApp green
+            size: 20,
+          ),
+          AppTheme.primaryGradient,
+          AppTheme.glowShadow,
+        ),
       ],
     );
+  }
+
+  Widget _actionButton(
+    void Function()? onTap,
+    String title,
+    Widget? icon,
+    Gradient color,
+    List<BoxShadow>? boxShadow,
+  ) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: onTap,
+        child:
+            Container(
+                  margin: .symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 14,
+                  ),
+                  decoration: BoxDecoration(
+                    gradient: color,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: boxShadow,
+                  ),
+                  child: Row(
+                    children: [
+                      icon!,
+                      SizedBox(width: 8),
+                      Text(
+                        title,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+                .animate(onPlay: (ctrl) => ctrl.repeat(reverse: true))
+                .shimmer(delay: 2000.ms, duration: 1500.ms),
+      ),
+    ).animate().fadeIn(delay: 300.ms);
   }
 
   Widget _buildFilters() {
@@ -384,6 +431,16 @@ class SubscriptionView extends GetView<SubscriptionController> {
             ),
             child: Row(
               children: [
+                Obx(
+                  () => Checkbox(
+                    value:
+                        controller.selectedIds.length ==
+                            controller.getPaginatedSubscriptions().length &&
+                        controller.selectedIds.isNotEmpty,
+                    onChanged: (val) => controller.selectAll(val ?? false),
+                    activeColor: AppTheme.primaryBlue,
+                  ),
+                ),
                 _buildHeaderCell('Client', flex: 2),
                 _buildHeaderCell('License Key', flex: 2),
                 _buildHeaderCell('Devices', flex: 1),
@@ -469,6 +526,14 @@ class SubscriptionView extends GetView<SubscriptionController> {
       child: Row(
         spacing: 10,
         children: [
+          // Select Checkbox
+          Obx(
+            () => Checkbox(
+              value: controller.isSelected(subscription.id),
+              onChanged: (val) => controller.toggleSelection(subscription.id),
+              activeColor: AppTheme.primaryBlue,
+            ),
+          ),
           // Client Info
           Expanded(
             flex: 2,
@@ -527,9 +592,11 @@ class SubscriptionView extends GetView<SubscriptionController> {
           // Devices
           Expanded(
             flex: 1,
-            child: Text(
-              '${subscription.licensesCount} / ${subscription.maxDevices}',
-              style: TextStyle(color: AppTheme.textSecondary, fontSize: 16),
+            child: Obx(
+              () => Text(
+                '${subscription.licensesCount.value} / ${subscription.maxDevices}',
+                style: TextStyle(color: AppTheme.textSecondary, fontSize: 16),
+              ),
             ),
           ),
 
@@ -575,7 +642,11 @@ class SubscriptionView extends GetView<SubscriptionController> {
             child: Row(
               children: [
                 _buildActionButton(
-                  icon: Icons.subdirectory_arrow_left_rounded,
+                  icon: Icon(
+                    Icons.subdirectory_arrow_left_rounded,
+                    size: 20,
+                    color: AppTheme.primaryBlue,
+                  ),
                   tooltip: 'Edit',
                   onTap: () {
                     Get.dialog(
@@ -583,9 +654,35 @@ class SubscriptionView extends GetView<SubscriptionController> {
                     );
                   },
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 6),
                 _buildActionButton(
-                  icon: Icons.delete_outline,
+                  icon: FaIcon(
+                    FontAwesomeIcons.google,
+                    color: AppTheme.accentRed, // WhatsApp green
+                    size: 16,
+                  ),
+                  tooltip: 'Send Email',
+                  color: AppTheme.accentRed,
+                  onTap: () => controller.sendEmailReminder(subscription),
+                ),
+                const SizedBox(width: 6),
+                _buildActionButton(
+                  icon: FaIcon(
+                    FontAwesomeIcons.whatsapp,
+                    color: AppTheme.accentGreen, // WhatsApp green
+                    size: 18,
+                  ),
+                  tooltip: 'Send WhatsApp',
+                  color: AppTheme.accentGreen,
+                  onTap: () => controller.sendWhatsAppReminder(subscription),
+                ),
+                const SizedBox(width: 6),
+                _buildActionButton(
+                  icon: Icon(
+                    Icons.delete_outline,
+                    size: 20,
+                    color: AppTheme.errorRed,
+                  ),
                   tooltip: 'Delete',
                   color: AppTheme.errorRed,
                   onTap: () => controller.deleteSubscription(subscription),
@@ -595,7 +692,13 @@ class SubscriptionView extends GetView<SubscriptionController> {
           ),
 
           _buildActionButton(
-            icon: Icons.arrow_forward_ios_outlined,
+            icon: Icon(
+              Icons.arrow_forward_ios_outlined,
+              size: 20,
+              color: subscription.licensesCount != 0
+                  ? AppTheme.primaryBlue
+                  : AppTheme.textSecondary,
+            ),
             tooltip: 'Open Licenses',
             color: subscription.licensesCount != 0
                 ? AppTheme.primaryBlue
@@ -707,7 +810,7 @@ class SubscriptionView extends GetView<SubscriptionController> {
   }
 
   Widget _buildActionButton({
-    required IconData icon,
+    required Widget icon,
     required String tooltip,
     required VoidCallback onTap,
     Color? color,
@@ -725,7 +828,7 @@ class SubscriptionView extends GetView<SubscriptionController> {
               color: (color ?? AppTheme.primaryBlue).withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(icon, size: 20, color: color ?? AppTheme.primaryBlue),
+            child: Center(child: icon),
           ),
         ),
       ),

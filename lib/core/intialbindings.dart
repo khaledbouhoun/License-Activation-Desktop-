@@ -9,20 +9,15 @@ import 'package:get/get.dart';
 class InitialBindings extends Bindings {
   @override
   void dependencies() {
-    // Start
-    Get.put(Crud());
+    Get.put(Crud(), permanent: true);
+    Get.put(AuthController(), permanent: true);
 
-    Get.put(AuthController());
+    // Dashboard first so others can find its searchQuery
+    Get.put<DashboardController>(DashboardController(), permanent: true);
 
-    Get.lazyPut<DashboardController>(() => DashboardController(), fenix: true);
-    Get.lazyPut<ClientController>(() => ClientController(), fenix: true);
-    Get.lazyPut<ApplicationController>(
-      () => ApplicationController(),
-      fenix: true,
-    );
-    Get.lazyPut<SubscriptionController>(
-      () => SubscriptionController(),
-      fenix: true,
-    );
+    // Register dependencies
+    Get.put<ClientController>(ClientController(), permanent: true);
+    Get.put<ApplicationController>(ApplicationController(), permanent: true);
+    Get.put<SubscriptionController>(SubscriptionController(), permanent: true);
   }
 }

@@ -20,7 +20,7 @@ class LicensesView extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppTheme.textPrimary),
-          onPressed: () => Get.back(),
+          onPressed: () => Get.back(result: controller.licenses.length),
         ),
         title: Row(
           mainAxisAlignment: .spaceBetween,

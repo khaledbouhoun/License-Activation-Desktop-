@@ -40,6 +40,8 @@ class _AddEditSubscriptionDialogState extends State<AddEditSubscriptionDialog> {
       id: 0,
       clientId: 0,
       clientName: '',
+      clientEmail: '',
+      clientPhone: '',
       applicationId: 0,
       applicationName: '',
       licenseKey: '',
@@ -50,7 +52,7 @@ class _AddEditSubscriptionDialogState extends State<AddEditSubscriptionDialog> {
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
       isActive: SubscriptionActive.active,
-      licensesCount: 0,
+      licensesCount: 0.obs,
     );
   }
 

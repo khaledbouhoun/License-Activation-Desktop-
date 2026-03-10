@@ -6,13 +6,14 @@ import 'package:softel_control/data/model/application_model.dart';
 import 'dart:convert';
 
 class ApplicationController extends GetxController {
-  DashboardController dashboardController = Get.find<DashboardController>();
+  DashboardController get _dashboardController =>
+      Get.find<DashboardController>();
   final RxList<ApplicationModel> applications = <ApplicationModel>[].obs;
   final RxList<ApplicationModel> filteredApplications =
       <ApplicationModel>[].obs;
 
   final RxBool isLoading = false.obs;
-  RxString get searchQuery => dashboardController.searchQuery;
+  RxString get searchQuery => _dashboardController.searchQuery;
 
   @override
   void onInit() {
@@ -110,21 +111,22 @@ class ApplicationController extends GetxController {
     }
   }
 
-  Future<void> deleteApplication(ApplicationModel application) async {
-    try {
-      var response = await authDelete(
-        "${AppLink.applications}/${application.id}",
-        {},
-      );
-      if (response.statusCode == 200 || response.statusCode == 204) {
-        Get.snackbar("Success", "Application deleted");
-        applications.removeWhere((c) => c.id == application.id);
-        filterApplications();
-      } else {
-        Get.snackbar("Error", "Failed to delete application: ${response.body}");
-      }
-    } catch (e) {
-      Get.snackbar("Error", "Exception: $e");
-    }
-  }
+  // Future<void> deleteApplication(ApplicationModel application) async {
+  //   try {
+  //     var response = await authDelete(
+  //       "${AppLink.applications}/${application.id}",
+  //       {},
+  //     );
+  //     if (response.statusCode == 200 || response.statusCode == 204) {
+  //       Get.snackbar("Success", "Application deleted");
+  //       applications.removeWhere((c) => c.id == application.id);
+  //       filterApplications();
+  //     } else {
+  //       Get.snackbar("Error", "Failed to delete application: ${response.body}");
+  //     }
+  //   } catch (e) {
+  //     Get.snackbar("Error", "Exception: $e");
+  //   }
+  // }
+
 }

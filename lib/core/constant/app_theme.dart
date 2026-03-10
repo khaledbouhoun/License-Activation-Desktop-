@@ -14,6 +14,9 @@ class AppTheme {
   static const Color accentGreen = Color(0xFF00FF88);
   static const Color accentGreenDark = Color(0xFF00CC6A);
 
+  static const Color accentRed = Color.fromARGB(255, 255, 51, 0);
+  static const Color accentRedDark = Color.fromARGB(255, 204, 48, 0);
+
   static const Color textPrimary = Color(0xFFFFFFFF);
   static const Color textSecondary = Color(0xFFB0B8C1);
   static const Color textTertiary = Color(0xFF6B7280);
@@ -69,6 +72,13 @@ class AppTheme {
     ),
   ];
 
+  static List<BoxShadow> redGlowShadow = [
+    BoxShadow(
+      color: accentRed.withValues(alpha: 0.3),
+      blurRadius: 15,
+      spreadRadius: 1,
+    ),
+  ];
   // Theme Data
   static ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
@@ -182,6 +192,11 @@ class AppTheme {
 
   static LinearGradient accentGradient = const LinearGradient(
     colors: [accentGreen, accentGreenDark],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+  static LinearGradient redGradient = const LinearGradient(
+    colors: [accentRed, accentRedDark],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );

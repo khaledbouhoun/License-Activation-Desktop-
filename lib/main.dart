@@ -9,28 +9,24 @@ import 'package:window_manager/window_manager.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // 2. Initialize the plugin first
-  await windowManager.ensureInitialized();
+  await windowsInitialize();
 
-  // 3. Set options WITHOUT complex alignments first,
-  // or handle the window manually to avoid the Null subtype error.
+  await initialServices();
+  runApp(const MyApp());
+}
+
+Future<void> windowsInitialize() async {
+  await windowManager.ensureInitialized();
   windowManager.waitUntilReadyToShow(null, () async {
-    // 1. Maximize first
     await windowManager.maximize();
-    // 2. Hide the default system title bar to allow custom coloring
     await windowManager.setTitleBarStyle(
       TitleBarStyle.hidden,
       windowButtonVisibility: false,
     );
-    // 3. Prevent the user from resizing it back down
-    // await windowManager.setResizable(false);
-
     await windowManager.center();
     await windowManager.show();
     await windowManager.focus();
   });
-  await initialServices();
-  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

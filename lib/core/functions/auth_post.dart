@@ -35,16 +35,17 @@ Future<http.Response> authGet(String url) async {
   print("AuthGet Request to: $url");
 
   try {
-    final response = await http.get(
-      Uri.parse(url),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'X-DESKTOP-APP-KEY': AppLink.desktopAppKey,
-      },
-    );
+    final response = await http
+        .get(
+          Uri.parse(url),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-DESKTOP-APP-KEY': AppLink.desktopAppKey,
+          },
+        )
+        .timeout(Duration(seconds: 30));
     print("AuthGet Request to: $url");
-    print("AuthGet Headers: ${response.headers}");
     print("AuthGet Status Code: ${response.statusCode}");
     print("AuthGet Response: ${response.body}");
 
