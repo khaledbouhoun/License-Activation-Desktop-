@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:softel_control/controller/application_controller.dart';
 import 'package:softel_control/core/constant/app_theme.dart';
-import 'package:softel_control/data/model/application_model.dart';
 import 'package:softel_control/view/application/add_edit_application_dialog.dart';
 
 class ApplicationView extends GetView<ApplicationController> {

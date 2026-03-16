@@ -51,7 +51,7 @@ Future<http.Response> authGet(String url) async {
 
     if (response.statusCode == 401) {
       print("AuthGet 401 Unauthorized.");
-    }
+    } 
 
     return response;
   } catch (e) {

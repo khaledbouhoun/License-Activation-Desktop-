@@ -47,6 +47,7 @@ dependencies:
   url_launcher: ^6.3.2
   font_awesome_flutter: ^11.0.0
   fl_chart: ^1.1.1
+  mailer:
 
 dev_dependencies:
   flutter_test:

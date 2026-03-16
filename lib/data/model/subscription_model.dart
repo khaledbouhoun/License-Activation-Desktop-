@@ -51,15 +51,9 @@ class SubscriptionModel {
       licenseKey: json['license_key'],
       maxDevices: json['max_devices'],
       duration: json['duration'],
-      startDate: json['start_date'] != null
-          ? DateTime.parse(json['start_date']).toLocal()
-          : null,
-      expiryDate: json['expiry_date'] != null
-          ? DateTime.parse(json['expiry_date']).toLocal()
-          : null,
-      isActive: isActiveVar == 1
-          ? SubscriptionActive.active
-          : SubscriptionActive.inactive,
+      startDate: json['start_date'] != null ? DateTime.parse(json['start_date']).toLocal() : null,
+      expiryDate: json['expiry_date'] != null ? DateTime.parse(json['expiry_date']).toLocal() : null,
+      isActive: isActiveVar == 1 ? SubscriptionActive.active : SubscriptionActive.inactive,
       createdAt: DateTime.parse(json['created_at']).toLocal(),
       updatedAt: DateTime.parse(json['updated_at']).toLocal(),
       licensesCount: RxInt(json['licenses_count'] ?? 0),
@@ -121,10 +115,19 @@ class SubscriptionModel {
     return DateFormat('dd MMM yyyy').format(expiryDate!);
   }
 
+  String get formattedCreationDate {
+    return DateFormat('dd MMM yyyy').format(createdAt);
+  }
+
+  int get durationMonths => duration;
+
   SubscriptionStatus get status {
     if (expiryDate == null) return SubscriptionStatus.current;
+    final nowDate = DateTime.now();
+    final today = DateTime(nowDate.year, nowDate.month, nowDate.day);
+    final expiry = DateTime(expiryDate!.year, expiryDate!.month, expiryDate!.day);
 
-    final days = expiryDate!.difference(DateTime.now()).inDays;
+    final days = expiry.difference(today).inDays;
 
     if (days <= 0) return SubscriptionStatus.expired;
     if (days <= 30) return SubscriptionStatus.warning;
@@ -134,7 +137,12 @@ class SubscriptionModel {
 
   int get daysUntilExpiry {
     if (expiryDate == null) return 9999;
-    int days = expiryDate!.difference(DateTime.now()).inDays;
+
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final expiryDay = DateTime(expiryDate!.year, expiryDate!.month, expiryDate!.day);
+
+    final days = expiryDay.difference(today).inDays;
     return days.isNegative ? 0 : days;
   }
 }

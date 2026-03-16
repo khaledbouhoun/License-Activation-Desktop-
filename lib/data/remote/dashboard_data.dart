@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:softel_control/core/class/crud.dart';
-import 'package:softel_control/core/class/statusrequest.dart';
-import 'package:softel_control/linkapi.dart';
+
 
 class DashboardData {
   Crud crud;

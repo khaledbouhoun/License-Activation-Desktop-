@@ -18,9 +18,7 @@ class SubscriptionView extends GetView<SubscriptionController> {
   Widget build(BuildContext context) {
     return Obx(() {
       if (controller.isLoading.value) {
-        return const Center(
-          child: CircularProgressIndicator(color: AppTheme.primaryBlue),
-        );
+        return const Center(child: CircularProgressIndicator(color: AppTheme.primaryBlue));
       }
 
       return Padding(
@@ -59,11 +57,7 @@ class SubscriptionView extends GetView<SubscriptionController> {
           children: [
             Text(
               'Subscriptions',
-              style: const TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: AppTheme.textPrimary,
-              ),
+              style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppTheme.textPrimary),
             ).animate().fadeIn(duration: 600.ms).slideX(begin: -0.2, end: 0),
 
             const SizedBox(height: 4),
@@ -71,10 +65,7 @@ class SubscriptionView extends GetView<SubscriptionController> {
             Obx(
               () => Text(
                 '${controller.filteredSubscriptions.length} total subscriptions',
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: AppTheme.textSecondary,
-                ),
+                style: const TextStyle(fontSize: 14, color: AppTheme.textSecondary),
               ),
             ).animate().fadeIn(delay: 200.ms),
           ],
@@ -95,6 +86,7 @@ class SubscriptionView extends GetView<SubscriptionController> {
           ),
           AppTheme.redGradient,
           AppTheme.redGlowShadow,
+          isLoading: controller.isLoadingSend,
         ),
         _actionButton(
           () {
@@ -130,44 +122,75 @@ class SubscriptionView extends GetView<SubscriptionController> {
     void Function()? onTap,
     String title,
     Widget? icon,
-    Gradient color,
-    List<BoxShadow>? boxShadow,
-  ) {
+    Gradient gradient,
+    List<BoxShadow>? boxShadow, {
+    RxBool? isLoading,
+  }) {
+    final loading = isLoading?.value ?? false;
+
     return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: onTap,
-        child:
-            Container(
-                  margin: .symmetric(horizontal: 10),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 14,
-                  ),
-                  decoration: BoxDecoration(
-                    gradient: color,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: boxShadow,
-                  ),
-                  child: Row(
-                    children: [
-                      icon!,
-                      SizedBox(width: 8),
-                      Text(
-                        title,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
+          cursor: loading
+              ? SystemMouseCursors.wait
+              : (onTap == null ? SystemMouseCursors.forbidden : SystemMouseCursors.click),
+          child: GestureDetector(
+            onTap: loading ? null : onTap,
+            child:
+                AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      curve: Curves.easeOutCubic,
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 13),
+                      decoration: BoxDecoration(
+                        gradient: loading
+                            ? LinearGradient(colors: [Colors.grey.shade400, Colors.grey.shade500])
+                            : gradient,
+                        borderRadius: BorderRadius.circular(14),
+                        boxShadow: loading ? [] : boxShadow,
                       ),
-                    ],
-                  ),
-                )
-                .animate(onPlay: (ctrl) => ctrl.repeat(reverse: true))
-                .shimmer(delay: 2000.ms, duration: 1500.ms),
-      ),
-    ).animate().fadeIn(delay: 300.ms);
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          // Actual content row — fades out when loading
+                          AnimatedOpacity(
+                            opacity: loading ? 0.0 : 1.0,
+                            duration: const Duration(milliseconds: 180),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (icon != null) Padding(padding: const EdgeInsets.only(right: 9), child: icon),
+                                Text(
+                                  title,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 0.3,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          // Spinner — fades in when loading
+                          AnimatedOpacity(
+                            opacity: loading ? 1.0 : 0.0,
+                            duration: const Duration(milliseconds: 180),
+                            child: const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                    .animate(onPlay: (ctrl) => ctrl.repeat(reverse: true))
+                    .shimmer(delay: 2200.ms, duration: 1800.ms, color: Colors.white.withOpacity(0.15)),
+          ),
+        )
+        .animate()
+        .fadeIn(delay: 300.ms, duration: 400.ms)
+        .slideY(begin: 0.08, end: 0, delay: 300.ms, duration: 400.ms, curve: Curves.easeOutCubic);
   }
 
   Widget _buildFilters() {
@@ -232,13 +255,7 @@ class SubscriptionView extends GetView<SubscriptionController> {
 
           Expanded(
             flex: 2,
-            child: Row(
-              spacing: 30,
-              children: [
-                _buildFilterDropDownClients(),
-                _buildFilterDropDownApplication(),
-              ],
-            ),
+            child: Row(spacing: 30, children: [_buildFilterDropDownClients(), _buildFilterDropDownApplication()]),
           ),
 
           Expanded(flex: 1, child: _buildFilterDropDownDate()),
@@ -263,23 +280,17 @@ class SubscriptionView extends GetView<SubscriptionController> {
           duration: const Duration(milliseconds: 300),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-            color: isSelected
-                ? (color ?? AppTheme.primaryBlue).withValues(alpha: 0.3)
-                : Colors.transparent,
+            color: isSelected ? (color ?? AppTheme.primaryBlue).withValues(alpha: 0.3) : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-              color: isSelected
-                  ? (color ?? AppTheme.primaryBlue)
-                  : AppTheme.borderColor.withValues(alpha: 0.3),
+              color: isSelected ? (color ?? AppTheme.primaryBlue) : AppTheme.borderColor.withValues(alpha: 0.3),
               width: 1.5,
             ),
           ),
           child: Text(
             label,
             style: TextStyle(
-              color: isSelected
-                  ? (color ?? AppTheme.primaryBlue)
-                  : AppTheme.textSecondary,
+              color: isSelected ? (color ?? AppTheme.primaryBlue) : AppTheme.textSecondary,
               fontSize: 14,
               fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
             ),
@@ -303,10 +314,7 @@ class SubscriptionView extends GetView<SubscriptionController> {
           underline: const SizedBox(),
           dropdownColor: AppTheme.surfaceLight,
           style: const TextStyle(color: AppTheme.textPrimary, fontSize: 14),
-          icon: const Icon(
-            Icons.arrow_drop_down,
-            color: AppTheme.textSecondary,
-          ),
+          icon: const Icon(Icons.arrow_drop_down, color: AppTheme.textSecondary),
           items: const [
             DropdownMenuItem(value: 'date', child: Text('Sort by Date')),
             DropdownMenuItem(value: 'expiry', child: Text('Sort by Expiry')),
@@ -332,30 +340,18 @@ class SubscriptionView extends GetView<SubscriptionController> {
       ),
       child: Obx(
         () => DropdownButton<ClientModel?>(
-          value:
-              controller.clientController.clients.contains(
-                controller.clientSelcted.value,
-              )
+          value: controller.clientController.clients.contains(controller.clientSelcted.value)
               ? controller.clientSelcted.value
               : null,
           hint: const Text("All Clients"),
           underline: const SizedBox(),
           dropdownColor: AppTheme.surfaceLight,
           style: const TextStyle(color: AppTheme.textPrimary, fontSize: 14),
-          icon: const Icon(
-            Icons.arrow_drop_down,
-            color: AppTheme.textSecondary,
-          ),
+          icon: const Icon(Icons.arrow_drop_down, color: AppTheme.textSecondary),
           items: [
-            const DropdownMenuItem<ClientModel?>(
-              value: null,
-              child: Text("All Clients"),
-            ),
+            const DropdownMenuItem<ClientModel?>(value: null, child: Text("All Clients")),
             ...controller.clientController.clients.map((client) {
-              return DropdownMenuItem<ClientModel?>(
-                value: client,
-                child: Text(client.name),
-              );
+              return DropdownMenuItem<ClientModel?>(value: client, child: Text(client.name));
             }),
           ],
           onChanged: (value) {
@@ -376,30 +372,18 @@ class SubscriptionView extends GetView<SubscriptionController> {
       ),
       child: Obx(
         () => DropdownButton<ApplicationModel?>(
-          value:
-              controller.applicationController.applications.contains(
-                controller.applicationSelcted.value,
-              )
+          value: controller.applicationController.applications.contains(controller.applicationSelcted.value)
               ? controller.applicationSelcted.value
               : null,
           hint: const Text("All Apps"),
           underline: const SizedBox(),
           dropdownColor: AppTheme.surfaceLight,
           style: const TextStyle(color: AppTheme.textPrimary, fontSize: 14),
-          icon: const Icon(
-            Icons.arrow_drop_down,
-            color: AppTheme.textSecondary,
-          ),
+          icon: const Icon(Icons.arrow_drop_down, color: AppTheme.textSecondary),
           items: [
-            const DropdownMenuItem<ApplicationModel?>(
-              value: null,
-              child: Text("All Apps"),
-            ),
+            const DropdownMenuItem<ApplicationModel?>(value: null, child: Text("All Apps")),
             ...controller.applicationController.applications.map((application) {
-              return DropdownMenuItem<ApplicationModel?>(
-                value: application,
-                child: Text(application.name),
-              );
+              return DropdownMenuItem<ApplicationModel?>(value: application, child: Text(application.name));
             }),
           ],
           onChanged: (value) {
@@ -434,17 +418,16 @@ class SubscriptionView extends GetView<SubscriptionController> {
                 Obx(
                   () => Checkbox(
                     value:
-                        controller.selectedIds.length ==
-                            controller.getPaginatedSubscriptions().length &&
+                        controller.selectedIds.length == controller.getPaginatedSubscriptions().length &&
                         controller.selectedIds.isNotEmpty,
                     onChanged: (val) => controller.selectAll(val ?? false),
                     activeColor: AppTheme.primaryBlue,
                   ),
                 ),
                 _buildHeaderCell('Client', flex: 2),
-                _buildHeaderCell('License Key', flex: 2),
+                _buildHeaderCell('License Key', flex: 3),
                 _buildHeaderCell('Devices', flex: 1),
-                _buildHeaderCell('Date Expiry', flex: 2),
+                _buildHeaderCell('Date Expiry', flex: 1),
                 _buildHeaderCell('Is Active', flex: 1),
                 _buildHeaderCell('Status', flex: 1),
                 _buildHeaderCell('Actions', flex: 1),
@@ -463,19 +446,9 @@ class SubscriptionView extends GetView<SubscriptionController> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
-                        Icons.inbox_outlined,
-                        size: 64,
-                        color: AppTheme.textTertiary,
-                      ),
+                      Icon(Icons.inbox_outlined, size: 64, color: AppTheme.textTertiary),
                       const SizedBox(height: 16),
-                      Text(
-                        'No subscriptions found',
-                        style: TextStyle(
-                          color: AppTheme.textSecondary,
-                          fontSize: 16,
-                        ),
-                      ),
+                      Text('No subscriptions found', style: TextStyle(color: AppTheme.textSecondary, fontSize: 16)),
                     ],
                   ),
                 );
@@ -483,10 +456,8 @@ class SubscriptionView extends GetView<SubscriptionController> {
 
               return ListView.separated(
                 itemCount: subscriptions.length,
-                separatorBuilder: (context, index) => Divider(
-                  color: AppTheme.dividerColor.withValues(alpha: 0.3),
-                  height: 1,
-                ),
+                separatorBuilder: (context, index) =>
+                    Divider(color: AppTheme.dividerColor.withValues(alpha: 0.3), height: 1),
                 itemBuilder: (context, index) {
                   final subscription = subscriptions[index];
                   return _buildTableRow(subscription, index);
@@ -542,48 +513,37 @@ class SubscriptionView extends GetView<SubscriptionController> {
               children: [
                 Text(
                   subscription.clientName,
-                  style: const TextStyle(
-                    color: AppTheme.textPrimary,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: const TextStyle(color: AppTheme.textPrimary, fontSize: 16, fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  subscription.applicationName,
-                  style: const TextStyle(
-                    color: AppTheme.textTertiary,
-                    fontSize: 14,
-                  ),
-                ),
+                Text(subscription.applicationName, style: const TextStyle(color: AppTheme.textTertiary, fontSize: 14)),
               ],
             ),
           ),
 
           // License Key
           Expanded(
-            flex: 2,
+            flex: 3,
             child: Row(
-              mainAxisAlignment: .spaceBetween,
+              mainAxisAlignment: .start,
               children: [
                 Text(
                   subscription.licenseKey,
-                  style: const TextStyle(
-                    color: AppTheme.textSecondary,
-                    fontSize: 15,
-                    fontFamily: 'monospace',
-                  ),
+                  style: const TextStyle(color: AppTheme.textSecondary, fontSize: 18, fontFamily: 'monospace'),
                 ),
                 IconButton(
-                  icon: const Icon(
-                    Icons.copy,
-                    size: 20,
-                    color: AppTheme.textTertiary,
-                  ),
+                  icon: const Icon(Icons.copy, size: 20, color: AppTheme.textTertiary),
                   onPressed: () {
                     controller.copyLicenseKey(subscription.licenseKey);
                   },
                   tooltip: 'Copy License Key',
+                ),
+                IconButton(
+                  icon: const Icon(Icons.email_outlined, size: 20, color: AppTheme.accentRed),
+                  onPressed: () {
+                    controller.sendEmailCreationSubscribe(subscription);
+                  },
+                  tooltip: 'Send Activation Email',
                 ),
               ],
             ),
@@ -602,28 +562,21 @@ class SubscriptionView extends GetView<SubscriptionController> {
 
           // Expiry Date
           Expanded(
-            flex: 2,
+            flex: 1,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   subscription.expiryDate != null
-                      ? DateFormat(
-                          'MMM dd, yyyy',
-                        ).format(subscription.expiryDate!)
+                      ? DateFormat('MMM dd, yyyy').format(subscription.expiryDate!)
                       : '-- -- , ----',
-                  style: const TextStyle(
-                    color: AppTheme.textPrimary,
-                    fontSize: 16,
-                  ),
+                  style: const TextStyle(color: AppTheme.textPrimary, fontSize: 16),
                 ),
                 if (subscription.expiryDate != null) ...[
                   const SizedBox(height: 4),
                   Text(
-                    subscription.daysUntilExpiry > 0
-                        ? '${subscription.daysUntilExpiry} days left'
-                        : 'Expired',
                     style: TextStyle(color: color, fontSize: 12),
+                    subscription.daysUntilExpiry > 0 ? '${subscription.daysUntilExpiry} days left' : 'Expired',
                   ),
                 ],
               ],
@@ -641,51 +594,67 @@ class SubscriptionView extends GetView<SubscriptionController> {
             flex: 1,
             child: Row(
               children: [
+                // Edit button
                 _buildActionButton(
-                  icon: Icon(
-                    Icons.subdirectory_arrow_left_rounded,
-                    size: 20,
-                    color: AppTheme.primaryBlue,
-                  ),
+                  icon: Icon(Icons.subdirectory_arrow_left_rounded, size: 20, color: AppTheme.primaryBlue),
                   tooltip: 'Edit',
                   onTap: () {
-                    Get.dialog(
-                      EditSubscriptionDialog(subscription: subscription),
-                    );
+                    Get.dialog(EditSubscriptionDialog(subscription: subscription));
                   },
                 ),
                 const SizedBox(width: 6),
-                _buildActionButton(
-                  icon: FaIcon(
-                    FontAwesomeIcons.google,
-                    color: AppTheme.accentRed, // WhatsApp green
-                    size: 16,
-                  ),
-                  tooltip: 'Send Email',
-                  color: AppTheme.accentRed,
-                  onTap: () => controller.sendEmailReminder(subscription),
-                ),
-                const SizedBox(width: 6),
-                _buildActionButton(
-                  icon: FaIcon(
-                    FontAwesomeIcons.whatsapp,
-                    color: AppTheme.accentGreen, // WhatsApp green
-                    size: 18,
-                  ),
-                  tooltip: 'Send WhatsApp',
-                  color: AppTheme.accentGreen,
-                  onTap: () => controller.sendWhatsAppReminder(subscription),
-                ),
-                const SizedBox(width: 6),
-                _buildActionButton(
-                  icon: Icon(
-                    Icons.delete_outline,
-                    size: 20,
-                    color: AppTheme.errorRed,
-                  ),
-                  tooltip: 'Delete',
-                  color: AppTheme.errorRed,
-                  onTap: () => controller.deleteSubscription(subscription),
+
+                // Three dots menu for extra actions
+                PopupMenuButton<String>(
+                  icon: Icon(Icons.more_vert, size: 20, color: AppTheme.primaryBlue),
+                  tooltip: 'More actions',
+                  onSelected: (value) {
+                    switch (value) {
+                      case 'send_email':
+                        controller.sendEmailReminder(subscription);
+                        break;
+                      case 'send_whatsapp':
+                        controller.sendWhatsAppReminder(subscription);
+                        break;
+                      case 'delete':
+                        dialogConfirmDelete(subscription);
+
+                        break;
+                    }
+                  },
+                  itemBuilder: (BuildContext context) => [
+                    PopupMenuItem(
+                      value: 'send_email',
+                      child: Row(
+                        children: [
+                          FaIcon(FontAwesomeIcons.google, size: 16, color: AppTheme.accentRed),
+                          SizedBox(width: 8),
+                          Text('Send Email'),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: 'send_whatsapp',
+                      child: Row(
+                        children: [
+                          FaIcon(FontAwesomeIcons.whatsapp, size: 18, color: AppTheme.accentGreen),
+                          SizedBox(width: 8),
+                          Text('Send WhatsApp'),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: 'delete',
+                      child: Row(
+                        children: [
+                          FaIcon(FontAwesomeIcons.trashCan, size: 18, color: AppTheme.errorRed),
+
+                          SizedBox(width: 8),
+                          Text('Delete'),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -695,21 +664,34 @@ class SubscriptionView extends GetView<SubscriptionController> {
             icon: Icon(
               Icons.arrow_forward_ios_outlined,
               size: 20,
-              color: subscription.licensesCount != 0
-                  ? AppTheme.primaryBlue
-                  : AppTheme.textSecondary,
+              color: subscription.licensesCount != 0 ? AppTheme.primaryBlue : AppTheme.textSecondary,
             ),
             tooltip: 'Open Licenses',
-            color: subscription.licensesCount != 0
-                ? AppTheme.primaryBlue
-                : AppTheme.textSecondary,
-            onTap: () => subscription.licensesCount != 0
-                ? controller.openLicenses(subscription)
-                : null,
+            color: subscription.licensesCount != 0 ? AppTheme.primaryBlue : AppTheme.textSecondary,
+            onTap: () => subscription.licensesCount != 0 ? controller.openLicenses(subscription) : null,
           ),
         ],
       ),
     ).animate().fadeIn(delay: (300 + (index * 50)).ms);
+  }
+
+  void dialogConfirmDelete(SubscriptionModel subscription) {
+    Get.dialog(
+      AlertDialog(
+        title: const Text("Delete Subscription"),
+        content: const Text("Are you sure you want to delete this subscription?"),
+        actions: [
+          TextButton(onPressed: () => Get.back(), child: const Text("Cancel")),
+          TextButton(
+            onPressed: () {
+              Get.back();
+              controller.deleteSubscription(subscription);
+            },
+            child: const Text("Delete", style: TextStyle(color: AppTheme.errorRed)),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildStatusBadge(SubscriptionStatus status) {
@@ -747,19 +729,13 @@ class SubscriptionView extends GetView<SubscriptionController> {
             decoration: BoxDecoration(
               color: color,
               shape: BoxShape.circle,
-              boxShadow: status == SubscriptionStatus.current
-                  ? AppTheme.greenGlowShadow
-                  : null,
+              boxShadow: status == SubscriptionStatus.current ? AppTheme.greenGlowShadow : null,
             ),
           ),
           const SizedBox(width: 8),
           Text(
             status.name.toUpperCase(),
-            style: TextStyle(
-              color: color,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-            ),
+            style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600),
           ),
         ],
       ),
@@ -789,11 +765,7 @@ class SubscriptionView extends GetView<SubscriptionController> {
               onChanged: (value) {
                 isActive.value = !isActive.value;
                 controller.editSubscription(
-                  subscription.copyWith(
-                    isActive: value
-                        ? SubscriptionActive.active
-                        : SubscriptionActive.inactive,
-                  ),
+                  subscription.copyWith(isActive: value ? SubscriptionActive.active : SubscriptionActive.inactive),
                   loadSubscription: false,
                 );
               },
@@ -872,23 +844,17 @@ class SubscriptionView extends GetView<SubscriptionController> {
                     width: 36,
                     height: 36,
                     decoration: BoxDecoration(
-                      color: isSelected
-                          ? AppTheme.primaryBlue
-                          : Colors.transparent,
+                      color: isSelected ? AppTheme.primaryBlue : Colors.transparent,
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                        color: isSelected
-                            ? AppTheme.primaryBlue
-                            : AppTheme.borderColor.withValues(alpha: 0.3),
+                        color: isSelected ? AppTheme.primaryBlue : AppTheme.borderColor.withValues(alpha: 0.3),
                       ),
                     ),
                     alignment: Alignment.center,
                     child: Text(
                       pageNum.toString(),
                       style: TextStyle(
-                        color: isSelected
-                            ? Colors.white
-                            : AppTheme.textSecondary,
+                        color: isSelected ? Colors.white : AppTheme.textSecondary,
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                       ),
@@ -903,8 +869,7 @@ class SubscriptionView extends GetView<SubscriptionController> {
 
           // Next Button
           IconButton(
-            onPressed:
-                controller.currentPage.value < controller.totalPages.value
+            onPressed: controller.currentPage.value < controller.totalPages.value
                 ? () => controller.changePage(controller.currentPage.value + 1)
                 : null,
             icon: const Icon(Icons.chevron_right),

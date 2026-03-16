@@ -64,7 +64,7 @@ class LicenseModel {
   bool get isOnline =>
       lastSyncDate != null &&
       !isExpired &&
-      lastSyncDate!.isBefore(DateTime.now().add(const Duration(days: 1)));
+      DateTime.now().difference(lastSyncDate!).inHours < 24;
 
   bool get isExpired {
     if (expiryDate == null) return false;

@@ -95,7 +95,7 @@ class _AddEditClientDialogState extends State<AddEditClientDialog> {
               TextFieldFormWidget(label: "Email", ctrl: emailController),
               const SizedBox(height: 20),
               TextFieldFormWidget(
-                label: "Phone",
+                label: "Phone ( WhatsApp )",
                 ctrl: phoneController,
                 validator: (value) {
                   if (value!.length > 15) {
