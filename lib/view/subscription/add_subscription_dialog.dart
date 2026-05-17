@@ -15,8 +15,7 @@ class AddEditSubscriptionDialog extends StatefulWidget {
   const AddEditSubscriptionDialog({super.key});
 
   @override
-  State<AddEditSubscriptionDialog> createState() =>
-      _AddEditSubscriptionDialogState();
+  State<AddEditSubscriptionDialog> createState() => _AddEditSubscriptionDialogState();
 }
 
 class _AddEditSubscriptionDialogState extends State<AddEditSubscriptionDialog> {
@@ -35,6 +34,7 @@ class _AddEditSubscriptionDialogState extends State<AddEditSubscriptionDialog> {
   @override
   void initState() {
     super.initState();
+    controller.selectedTypeApp.value = 1;
 
     editableSubscription = SubscriptionModel(
       id: 0,
@@ -52,6 +52,7 @@ class _AddEditSubscriptionDialogState extends State<AddEditSubscriptionDialog> {
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
       isActive: SubscriptionActive.active,
+      typeApp: 0,
       licensesCount: 0.obs,
     );
   }
@@ -66,15 +67,8 @@ class _AddEditSubscriptionDialogState extends State<AddEditSubscriptionDialog> {
         decoration: BoxDecoration(
           color: AppTheme.surfaceDark,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: AppTheme.borderColor.withValues(alpha: 0.3),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.5),
-              blurRadius: 20,
-            ),
-          ],
+          border: Border.all(color: AppTheme.borderColor.withValues(alpha: 0.3)),
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.5), blurRadius: 20)],
         ),
         child: Form(
           key: _formKey,
@@ -85,19 +79,12 @@ class _AddEditSubscriptionDialogState extends State<AddEditSubscriptionDialog> {
             children: [
               Text(
                 'Add Subscription',
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.textPrimary,
-                ),
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppTheme.textPrimary),
               ),
               _buildClientDropdown(),
               _buildApplicationDropdown(),
-              TextFieldFormWidget(
-                label: "Max Devices",
-                ctrl: maxDevicesController,
-                isNumeric: true,
-              ),
+              _buildTypeAppDropdown(),
+              TextFieldFormWidget(label: "Max Devices", ctrl: maxDevicesController, isNumeric: true),
               DurationSelector(
                 initialMonths: initialDurationMonths,
                 onChanged: (months) {
@@ -112,10 +99,7 @@ class _AddEditSubscriptionDialogState extends State<AddEditSubscriptionDialog> {
                 children: [
                   TextButton(
                     onPressed: () => Get.back(),
-                    child: const Text(
-                      'Cancel',
-                      style: TextStyle(color: AppTheme.textSecondary),
-                    ),
+                    child: const Text('Cancel', style: TextStyle(color: AppTheme.textSecondary)),
                   ),
                   const SizedBox(width: 16),
                   ElevatedButton(
@@ -124,10 +108,10 @@ class _AddEditSubscriptionDialogState extends State<AddEditSubscriptionDialog> {
                         final subscription = editableSubscription!.copyWith(
                           clientId: selectedClient!.id,
                           applicationId: selectedApplication!.id,
-                          maxDevices:
-                              int.tryParse(maxDevicesController.text) ?? 5,
+                          maxDevices: int.tryParse(maxDevicesController.text) ?? 5,
                           duration: initialDurationMonths,
                           isActive: isActive,
+                          typeApp: controller.selectedTypeApp.value,
                         );
 
                         controller.addSubscription(subscription);
@@ -136,10 +120,7 @@ class _AddEditSubscriptionDialogState extends State<AddEditSubscriptionDialog> {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.primaryBlue,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 12,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                     ),
                     child: Text('Add'),
                   ),
@@ -159,9 +140,7 @@ class _AddEditSubscriptionDialogState extends State<AddEditSubscriptionDialog> {
         labelStyle: const TextStyle(color: AppTheme.textSecondary),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(
-            color: AppTheme.borderColor.withValues(alpha: 0.3),
-          ),
+          borderSide: BorderSide(color: AppTheme.borderColor.withValues(alpha: 0.3)),
         ),
       ),
       dropdownColor: AppTheme.surfaceLight,
@@ -180,9 +159,7 @@ class _AddEditSubscriptionDialogState extends State<AddEditSubscriptionDialog> {
         labelStyle: const TextStyle(color: AppTheme.textSecondary),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(
-            color: AppTheme.borderColor.withValues(alpha: 0.3),
-          ),
+          borderSide: BorderSide(color: AppTheme.borderColor.withValues(alpha: 0.3)),
         ),
       ),
       dropdownColor: AppTheme.surfaceLight,
@@ -191,6 +168,30 @@ class _AddEditSubscriptionDialogState extends State<AddEditSubscriptionDialog> {
         return DropdownMenuItem(value: app, child: Text(app.name));
       }).toList(),
       onChanged: (val) => setState(() => selectedApplication = val!),
+    );
+  }
+
+  Widget _buildTypeAppDropdown() {
+    return DropdownButtonFormField<int>(
+      initialValue: controller.selectedTypeApp.value,
+      decoration: InputDecoration(
+        labelText: "Type Application",
+        labelStyle: const TextStyle(color: AppTheme.textSecondary),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: AppTheme.borderColor.withValues(alpha: 0.3)),
+        ),
+      ),
+      dropdownColor: AppTheme.surfaceLight,
+      style: const TextStyle(color: AppTheme.textPrimary),
+      items: controller.typeAppList.map<DropdownMenuItem<int>>((app) {
+        return DropdownMenuItem<int>(value: app['id'] as int, child: Text(app['name'] as String));
+      }).toList(),
+      onChanged: (val) {
+        setState(() {
+          controller.selectedTypeApp.value = val!;
+        });
+      },
     );
   }
 }

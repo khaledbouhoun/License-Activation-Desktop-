@@ -36,16 +36,8 @@ class LoginScreen extends GetView<AuthController> {
                         decoration: BoxDecoration(
                           color: AppTheme.surfaceDark.withValues(alpha: 0.5),
                           borderRadius: BorderRadius.circular(24),
-                          border: Border.all(
-                            color: AppTheme.borderColor.withValues(alpha: 0.3),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.2),
-                              blurRadius: 20,
-                              offset: const Offset(0, 10),
-                            ),
-                          ],
+                          border: Border.all(color: AppTheme.borderColor.withValues(alpha: 0.3)),
+                          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 20, offset: const Offset(0, 10))],
                         ),
                         child: Form(
                           key: controller.formKey,
@@ -60,72 +52,46 @@ class LoginScreen extends GetView<AuthController> {
                                   gradient: AppTheme.primaryGradient,
                                   shape: BoxShape.circle,
                                   boxShadow: [
-                                    BoxShadow(
-                                      color: AppTheme.primaryBlue.withValues(
-                                        alpha: 0.4,
-                                      ),
-                                      blurRadius: 20,
-                                      spreadRadius: 5,
-                                    ),
+                                    BoxShadow(color: AppTheme.primaryBlue.withValues(alpha: 0.4), blurRadius: 20, spreadRadius: 5),
                                   ],
                                 ),
-                                child: const Icon(
-                                  Icons.shield_outlined,
-                                  color: Colors.white,
-                                  size: 40,
-                                ),
-                              ).animate().scale(
-                                duration: 600.ms,
-                                curve: Curves.easeOutBack,
-                              ),
+                                child: const Icon(Icons.shield_outlined, color: Colors.white, size: 40),
+                              ).animate().scale(duration: 600.ms, curve: Curves.easeOutBack),
 
                               const SizedBox(height: 24),
 
                               // Title
                               Text(
-                                    'Softel Control',
-                                    style: TextStyle(
-                                      fontSize: 28,
-                                      fontWeight: FontWeight.bold,
-                                      color: AppTheme.textPrimary,
-                                      letterSpacing: 1.5,
-                                    ),
-                                  )
-                                  .animate()
-                                  .fadeIn(delay: 200.ms)
-                                  .moveY(begin: 10, end: 0),
+                                'Softel Control',
+                                style: TextStyle(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppTheme.textPrimary,
+                                  letterSpacing: 1.5,
+                                ),
+                              ).animate().fadeIn(delay: 200.ms).moveY(begin: 10, end: 0),
 
                               const SizedBox(height: 8),
 
                               Text(
                                 'Admin Authentication',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: AppTheme.textSecondary,
-                                ),
+                                style: TextStyle(fontSize: 16, color: AppTheme.textSecondary),
                               ).animate().fadeIn(delay: 300.ms),
 
                               const SizedBox(height: 40),
 
                               // Password Field
                               Obx(
-                                    () => _buildTextField(
-                                      controllerText:
-                                          controller.passwordController,
-                                      label: 'Password',
-                                      icon: Icons.lock_outline,
-                                      isPassword: true,
-                                      obscureText:
-                                          controller.hidePassword.value,
-                                      onToggleVisibility:
-                                          controller.showPassword,
-                                      onFieldSubmitted: (v) =>
-                                          controller.login(),
-                                    ),
-                                  )
-                                  .animate()
-                                  .fadeIn(delay: 500.ms)
-                                  .moveX(begin: -20, end: 0),
+                                () => _buildTextField(
+                                  controllerText: controller.passwordController,
+                                  label: 'Password',
+                                  icon: Icons.lock_outline,
+                                  isPassword: true,
+                                  obscureText: controller.hidePassword.value,
+                                  onToggleVisibility: controller.showPassword,
+                                  onFieldSubmitted: (v) => controller.login(),
+                                ),
+                              ).animate().fadeIn(delay: 500.ms).moveX(begin: -20, end: 0),
 
                               // Obx(
                               //       () => _buildTextField(
@@ -144,61 +110,44 @@ class LoginScreen extends GetView<AuthController> {
 
                               // Login Button
                               Obx(
-                                    () => InkWell(
-                                      onTap: controller.isLoading.value
-                                          ? null
-                                          : () => controller.login(),
+                                () => InkWell(
+                                  onTap: controller.isLoading.value ? null : () => controller.login(),
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: 50,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      gradient: controller.isLoading.value
+                                          ? LinearGradient(colors: [Colors.grey, Colors.grey.shade700])
+                                          : AppTheme.primaryGradient,
                                       borderRadius: BorderRadius.circular(12),
-                                      child: Container(
-                                        width: double.infinity,
-                                        height: 50,
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                          gradient: controller.isLoading.value
-                                              ? LinearGradient(
-                                                  colors: [
-                                                    Colors.grey,
-                                                    Colors.grey.shade700,
-                                                  ],
-                                                )
-                                              : AppTheme.primaryGradient,
-                                          borderRadius: BorderRadius.circular(
-                                            12,
-                                          ),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: AppTheme.primaryBlue
-                                                  .withValues(alpha: 0.3),
-                                              blurRadius: 12,
-                                              offset: const Offset(0, 4),
-                                            ),
-                                          ],
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: AppTheme.primaryBlue.withValues(alpha: 0.3),
+                                          blurRadius: 12,
+                                          offset: const Offset(0, 4),
                                         ),
-                                        child: controller.isLoading.value
-                                            ? const SizedBox(
-                                                width: 24,
-                                                height: 24,
-                                                child:
-                                                    CircularProgressIndicator(
-                                                      color: Colors.white,
-                                                      strokeWidth: 2,
-                                                    ),
-                                              )
-                                            : const Text(
-                                                'LOGIN',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                  letterSpacing: 1,
-                                                ),
-                                              ),
-                                      ),
+                                      ],
                                     ),
-                                  )
-                                  .animate()
-                                  .fadeIn(delay: 600.ms)
-                                  .moveY(begin: 20, end: 0),
+                                    child: controller.isLoading.value
+                                        ? const SizedBox(
+                                            width: 24,
+                                            height: 24,
+                                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                                          )
+                                        : const Text(
+                                            'LOGIN',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              letterSpacing: 1,
+                                            ),
+                                          ),
+                                  ),
+                                ),
+                              ).animate().fadeIn(delay: 600.ms).moveY(begin: 20, end: 0),
                             ],
                           ),
                         ),
@@ -234,8 +183,8 @@ class LoginScreen extends GetView<AuthController> {
           if (value == null || value.isEmpty) {
             return 'Please enter your password';
           }
-          
-          if (value.toLowerCase() != "Secret Key") {
+
+          if (value.toLowerCase() != " ") {
             return 'Incorrect password';
           }
           return null;
@@ -252,20 +201,12 @@ class LoginScreen extends GetView<AuthController> {
           prefixIcon: Icon(icon, color: AppTheme.textSecondary),
           suffixIcon: isPassword
               ? IconButton(
-                  icon: Icon(
-                    obscureText
-                        ? Icons.visibility_outlined
-                        : Icons.visibility_off_outlined,
-                    color: AppTheme.textSecondary,
-                  ),
+                  icon: Icon(obscureText ? Icons.visibility_outlined : Icons.visibility_off_outlined, color: AppTheme.textSecondary),
                   onPressed: onToggleVisibility,
                 )
               : null,
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 12,
-          ),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         ),
       ),
     );

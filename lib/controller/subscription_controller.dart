@@ -19,11 +19,9 @@ class SubscriptionController extends GetxController {
   // Subscriptions list
 
   ClientController clientController = Get.find<ClientController>();
-  ApplicationController applicationController =
-      Get.find<ApplicationController>();
+  ApplicationController applicationController = Get.find<ApplicationController>();
   final RxList<SubscriptionModel> subscriptions = <SubscriptionModel>[].obs;
-  final RxList<SubscriptionModel> filteredSubscriptions =
-      <SubscriptionModel>[].obs;
+  final RxList<SubscriptionModel> filteredSubscriptions = <SubscriptionModel>[].obs;
 
   // Selection
   final RxList<int> selectedIds = <int>[].obs;
@@ -45,6 +43,14 @@ class SubscriptionController extends GetxController {
   // Filter and sort
   final RxString filterStatus = 'All'.obs;
   final RxString sortBy = 'date'.obs;
+
+  // Type App
+  RxInt selectedTypeApp = 0.obs;
+  List<Map<String, dynamic>> typeAppList = [
+    {'id': 0, 'name': 'None'},
+    {'id': 1, 'name': 'General'},
+    {'id': 2, 'name': 'Conception'},
+  ];
 
   @override
   void onInit() {
@@ -98,24 +104,14 @@ class SubscriptionController extends GetxController {
           data = responseBody;
         }
 
-        subscriptions.value = data
-            .map((json) => SubscriptionModel.fromJson(json))
-            .toList();
+        subscriptions.value = data.map((json) => SubscriptionModel.fromJson(json)).toList();
         applyFilters();
       } else {
-        Get.snackbar(
-          'Error',
-          'Failed to load subscriptions: ${response.statusCode}',
-          snackPosition: SnackPosition.BOTTOM,
-        );
+        Get.snackbar('Error', 'Failed to load subscriptions: ${response.statusCode}', snackPosition: SnackPosition.BOTTOM);
       }
     } catch (e) {
       print("Error loading subscriptions: $e");
-      Get.snackbar(
-        'Error',
-        'Exception loading subscriptions: $e',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      Get.snackbar('Error', 'Exception loading subscriptions: $e', snackPosition: SnackPosition.BOTTOM);
     } finally {
       isLoading.value = false;
     }
@@ -127,33 +123,24 @@ class SubscriptionController extends GetxController {
 
     // Filter by status
     if (filterStatus.value != 'All') {
-      filtered = filtered
-          .where((sub) => sub.status.name == filterStatus.value)
-          .toList();
+      filtered = filtered.where((sub) => sub.status.name == filterStatus.value).toList();
     }
 
     // Filter by client
     if (clientSelcted.value != null) {
-      filtered = filtered
-          .where((sub) => sub.clientId == clientSelcted.value!.id)
-          .toList();
+      filtered = filtered.where((sub) => sub.clientId == clientSelcted.value!.id).toList();
     }
 
     // Filter by application
     if (applicationSelcted.value != null) {
-      filtered = filtered
-          .where((sub) => sub.applicationId == applicationSelcted.value!.id)
-          .toList();
+      filtered = filtered.where((sub) => sub.applicationId == applicationSelcted.value!.id).toList();
     }
 
     // Sort
     if (sortBy.value == 'date') {
       filtered.sort((a, b) => b.createdAt.compareTo(a.createdAt));
     } else if (sortBy.value == 'expiry') {
-      filtered
-          .where((sub) => sub.expiryDate != null)
-          .toList()
-          .sort((a, b) => a.expiryDate!.compareTo(b.expiryDate!));
+      filtered.where((sub) => sub.expiryDate != null).toList().sort((a, b) => a.expiryDate!.compareTo(b.expiryDate!));
     } else if (sortBy.value == 'name') {
       filtered.sort((a, b) => a.clientName.compareTo(b.clientName));
     }
@@ -180,10 +167,7 @@ class SubscriptionController extends GetxController {
   // Get paginated subscriptions
   List<SubscriptionModel> getPaginatedSubscriptions() {
     final startIndex = (currentPage.value - 1) * itemsPerPage;
-    final endIndex = (startIndex + itemsPerPage).clamp(
-      0,
-      filteredSubscriptions.length,
-    );
+    final endIndex = (startIndex + itemsPerPage).clamp(0, filteredSubscriptions.length);
 
     if (startIndex >= filteredSubscriptions.length) {
       return [];
@@ -216,16 +200,12 @@ class SubscriptionController extends GetxController {
         "Veuillez nous contacter pour renouveler votre abonnement.\n\n"
         "Merci beaucoup ! 😊";
 
-    final Uri whatsappUri = Uri.parse(
-      "whatsapp://send?phone=${sub.clientPhone}&text=${Uri.encodeComponent(message)}",
-    );
+    final Uri whatsappUri = Uri.parse("whatsapp://send?phone=${sub.clientPhone}&text=${Uri.encodeComponent(message)}");
 
     if (await canLaunchUrl(whatsappUri)) {
       await launchUrl(whatsappUri, mode: LaunchMode.externalApplication);
     } else {
-      final Uri webUri = Uri.parse(
-        "https://wa.me/${sub.clientPhone}?text=${Uri.encodeComponent(message)}",
-      );
+      final Uri webUri = Uri.parse("https://wa.me/${sub.clientPhone}?text=${Uri.encodeComponent(message)}");
 
       if (await canLaunchUrl(webUri)) {
         await launchUrl(webUri, mode: LaunchMode.externalApplication);
@@ -243,11 +223,7 @@ class SubscriptionController extends GetxController {
     } else {
       // If none selected, target all in 'warning' or 'expired' status from filtered list
       targets = filteredSubscriptions
-          .where(
-            (s) =>
-                s.status == SubscriptionStatus.warning ||
-                s.status == SubscriptionStatus.expired,
-          )
+          .where((s) => s.status == SubscriptionStatus.warning || s.status == SubscriptionStatus.expired)
           .toList();
     }
 
@@ -280,11 +256,7 @@ class SubscriptionController extends GetxController {
       targets = subscriptions.where((s) => selectedIds.contains(s.id)).toList();
     } else {
       targets = filteredSubscriptions
-          .where(
-            (s) =>
-                s.status == SubscriptionStatus.warning ||
-                s.status == SubscriptionStatus.expired,
-          )
+          .where((s) => s.status == SubscriptionStatus.warning || s.status == SubscriptionStatus.expired)
           .toList();
     }
 
@@ -342,12 +314,8 @@ class SubscriptionController extends GetxController {
     // Dynamic variables — used via Dart interpolation inside the HTML string
     final bool isExpired = sub.status == SubscriptionStatus.expired;
     final String accentColor = isExpired ? '#dc2626' : '#ea580c';
-    final String statusLabel = isExpired
-        ? 'ABONNEMENT EXPIRÉ'
-        : 'Expire Bientôt';
-    final String statusMessage = isExpired
-        ? 'Votre abonnement a expiré'
-        : 'Votre abonnement expire dans ${sub.daysUntilExpiry} jours';
+    final String statusLabel = isExpired ? 'ABONNEMENT EXPIRÉ' : 'Expire Bientôt';
+    final String statusMessage = isExpired ? 'Votre abonnement a expiré' : 'Votre abonnement expire dans ${sub.daysUntilExpiry} jours';
     final int currentYear = DateTime.now().year;
 
     // NOTE: Every ${ } below is a real Dart interpolation.
@@ -986,11 +954,7 @@ class SubscriptionController extends GetxController {
 
     try {
       await send(message, smtpServer);
-      Get.snackbar(
-        'Success',
-        'Creation email sent to ${sub.clientName}',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      Get.snackbar('Success', 'Creation email sent to ${sub.clientName}', snackPosition: SnackPosition.BOTTOM);
     } catch (e) {
       Get.snackbar(
         'Error',
@@ -1007,11 +971,7 @@ class SubscriptionController extends GetxController {
 
   void copyLicenseKey(String licenseKey) {
     Clipboard.setData(ClipboardData(text: licenseKey));
-    Get.snackbar(
-      'Success',
-      'License key copied to clipboard',
-      snackPosition: SnackPosition.BOTTOM,
-    );
+    Get.snackbar('Success', 'License key copied to clipboard', snackPosition: SnackPosition.BOTTOM);
   }
 
   void openLicenses(SubscriptionModel subscription) async {
@@ -1030,66 +990,33 @@ class SubscriptionController extends GetxController {
 
   Future<void> addSubscription(SubscriptionModel subscription) async {
     try {
-      var response = await authPost(
-        AppLink.subscriptions,
-        subscription.toJson(),
-      );
+      var response = await authPost(AppLink.subscriptions, subscription.toJson());
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        Get.snackbar(
-          "Success",
-          "Subscription added",
-          snackPosition: SnackPosition.BOTTOM,
-        );
+        Get.snackbar("Success", "Subscription added", snackPosition: SnackPosition.BOTTOM);
         await loadSubscriptions();
       } else {
-        Get.snackbar(
-          "Error",
-          "Failed to add: ${response.body}",
-          snackPosition: SnackPosition.BOTTOM,
-        );
+        Get.snackbar("Error", "Failed to add: ${response.body}", snackPosition: SnackPosition.BOTTOM);
       }
     } catch (e) {
-      Get.snackbar(
-        "Error",
-        "Exception: $e",
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      Get.snackbar("Error", "Exception: $e", snackPosition: SnackPosition.BOTTOM);
     }
   }
 
   // Edit Subscription
 
-  Future<void> editSubscription(
-    SubscriptionModel subscription, {
-    bool loadSubscription = true,
-  }) async {
+  Future<void> editSubscription(SubscriptionModel subscription, {bool loadSubscription = true}) async {
     try {
-      var response = await authPut(
-        "${AppLink.subscriptions}/${subscription.id}",
-        subscription.toJson(),
-      );
+      var response = await authPut("${AppLink.subscriptions}/${subscription.id}", subscription.toJson());
 
       if (response.statusCode == 200) {
-        Get.snackbar(
-          "Success",
-          "Subscription updated",
-          snackPosition: SnackPosition.BOTTOM,
-        );
+        Get.snackbar("Success", "Subscription updated", snackPosition: SnackPosition.BOTTOM);
         if (loadSubscription) await loadSubscriptions();
       } else {
-        Get.snackbar(
-          "Error",
-          "Failed to update: ${response.body}",
-          snackPosition: SnackPosition.BOTTOM,
-        );
+        Get.snackbar("Error", "Failed to update: ${response.body}", snackPosition: SnackPosition.BOTTOM);
       }
     } catch (e) {
-      Get.snackbar(
-        "Error",
-        "Exception: $e",
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      Get.snackbar("Error", "Exception: $e", snackPosition: SnackPosition.BOTTOM);
     } finally {}
   }
 
@@ -1098,33 +1025,18 @@ class SubscriptionController extends GetxController {
   Future<void> deleteSubscription(SubscriptionModel subscription) async {
     try {
       // API Call
-      var response = await authDelete(
-        "${AppLink.subscriptions}/${subscription.id}",
-        {},
-      );
+      var response = await authDelete("${AppLink.subscriptions}/${subscription.id}", {});
 
       if (response.statusCode == 200 || response.statusCode == 204) {
         subscriptions.removeWhere((sub) => sub.id == subscription.id);
         applyFilters();
 
-        Get.snackbar(
-          'Success',
-          'Subscription deleted successfully',
-          snackPosition: SnackPosition.BOTTOM,
-        );
+        Get.snackbar('Success', 'Subscription deleted successfully', snackPosition: SnackPosition.BOTTOM);
       } else {
-        Get.snackbar(
-          'Error',
-          'Failed to delete: ${response.statusCode}',
-          snackPosition: SnackPosition.BOTTOM,
-        );
+        Get.snackbar('Error', 'Failed to delete: ${response.statusCode}', snackPosition: SnackPosition.BOTTOM);
       }
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Exception deleting subscription: $e',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      Get.snackbar('Error', 'Exception deleting subscription: $e', snackPosition: SnackPosition.BOTTOM);
     }
   }
 }

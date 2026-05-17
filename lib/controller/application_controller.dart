@@ -12,6 +12,8 @@ class ApplicationController extends GetxController {
   final RxList<ApplicationModel> filteredApplications =
       <ApplicationModel>[].obs;
 
+      
+
   final RxBool isLoading = false.obs;
   RxString get searchQuery => _dashboardController.searchQuery;
 

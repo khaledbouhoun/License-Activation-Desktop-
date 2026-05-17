@@ -129,9 +129,7 @@ class SubscriptionView extends GetView<SubscriptionController> {
     final loading = isLoading?.value ?? false;
 
     return MouseRegion(
-          cursor: loading
-              ? SystemMouseCursors.wait
-              : (onTap == null ? SystemMouseCursors.forbidden : SystemMouseCursors.click),
+          cursor: loading ? SystemMouseCursors.wait : (onTap == null ? SystemMouseCursors.forbidden : SystemMouseCursors.click),
           child: GestureDetector(
             onTap: loading ? null : onTap,
             child:
@@ -141,9 +139,7 @@ class SubscriptionView extends GetView<SubscriptionController> {
                       margin: const EdgeInsets.symmetric(horizontal: 10),
                       padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 13),
                       decoration: BoxDecoration(
-                        gradient: loading
-                            ? LinearGradient(colors: [Colors.grey.shade400, Colors.grey.shade500])
-                            : gradient,
+                        gradient: loading ? LinearGradient(colors: [Colors.grey.shade400, Colors.grey.shade500]) : gradient,
                         borderRadius: BorderRadius.circular(14),
                         boxShadow: loading ? [] : boxShadow,
                       ),
@@ -185,7 +181,7 @@ class SubscriptionView extends GetView<SubscriptionController> {
                       ),
                     )
                     .animate(onPlay: (ctrl) => ctrl.repeat(reverse: true))
-                    .shimmer(delay: 2200.ms, duration: 1800.ms, color: Colors.white.withOpacity(0.15)),
+                    .shimmer(delay: 2200.ms, duration: 1800.ms, color: Colors.white.withValues(alpha: 0.15)),
           ),
         )
         .animate()
@@ -253,10 +249,7 @@ class SubscriptionView extends GetView<SubscriptionController> {
             ),
           ),
 
-          Expanded(
-            flex: 2,
-            child: Row(spacing: 30, children: [_buildFilterDropDownClients(), _buildFilterDropDownApplication()]),
-          ),
+          Expanded(flex: 2, child: Row(spacing: 30, children: [_buildFilterDropDownClients(), _buildFilterDropDownApplication()])),
 
           Expanded(flex: 1, child: _buildFilterDropDownDate()),
 
@@ -266,12 +259,7 @@ class SubscriptionView extends GetView<SubscriptionController> {
     ).animate().fadeIn(delay: 200.ms);
   }
 
-  Widget _buildFilterChip({
-    required String label,
-    required bool isSelected,
-    required VoidCallback onTap,
-    Color? color,
-  }) {
+  Widget _buildFilterChip({required String label, required bool isSelected, required VoidCallback onTap, Color? color}) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
@@ -340,9 +328,7 @@ class SubscriptionView extends GetView<SubscriptionController> {
       ),
       child: Obx(
         () => DropdownButton<ClientModel?>(
-          value: controller.clientController.clients.contains(controller.clientSelcted.value)
-              ? controller.clientSelcted.value
-              : null,
+          value: controller.clientController.clients.contains(controller.clientSelcted.value) ? controller.clientSelcted.value : null,
           hint: const Text("All Clients"),
           underline: const SizedBox(),
           dropdownColor: AppTheme.surfaceLight,
@@ -418,8 +404,7 @@ class SubscriptionView extends GetView<SubscriptionController> {
                 Obx(
                   () => Checkbox(
                     value:
-                        controller.selectedIds.length == controller.getPaginatedSubscriptions().length &&
-                        controller.selectedIds.isNotEmpty,
+                        controller.selectedIds.length == controller.getPaginatedSubscriptions().length && controller.selectedIds.isNotEmpty,
                     onChanged: (val) => controller.selectAll(val ?? false),
                     activeColor: AppTheme.primaryBlue,
                   ),
@@ -456,8 +441,7 @@ class SubscriptionView extends GetView<SubscriptionController> {
 
               return ListView.separated(
                 itemCount: subscriptions.length,
-                separatorBuilder: (context, index) =>
-                    Divider(color: AppTheme.dividerColor.withValues(alpha: 0.3), height: 1),
+                separatorBuilder: (context, index) => Divider(color: AppTheme.dividerColor.withValues(alpha: 0.3), height: 1),
                 itemBuilder: (context, index) {
                   final subscription = subscriptions[index];
                   return _buildTableRow(subscription, index);
@@ -475,12 +459,7 @@ class SubscriptionView extends GetView<SubscriptionController> {
       flex: flex,
       child: Text(
         text,
-        style: const TextStyle(
-          color: AppTheme.textSecondary,
-          fontSize: 13,
-          fontWeight: FontWeight.w600,
-          letterSpacing: 0.5,
-        ),
+        style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13, fontWeight: FontWeight.w600, letterSpacing: 0.5),
       ),
     );
   }
@@ -516,7 +495,10 @@ class SubscriptionView extends GetView<SubscriptionController> {
                   style: const TextStyle(color: AppTheme.textPrimary, fontSize: 16, fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 4),
-                Text(subscription.applicationName, style: const TextStyle(color: AppTheme.textTertiary, fontSize: 14)),
+                Text(
+                  '${subscription.applicationName} - ${controller.typeAppList[subscription.typeApp]['name']}',
+                  style: const TextStyle(color: AppTheme.textTertiary, fontSize: 14),
+                ),
               ],
             ),
           ),
@@ -567,9 +549,7 @@ class SubscriptionView extends GetView<SubscriptionController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  subscription.expiryDate != null
-                      ? DateFormat('MMM dd, yyyy').format(subscription.expiryDate!)
-                      : '-- -- , ----',
+                  subscription.expiryDate != null ? DateFormat('MMM dd, yyyy').format(subscription.expiryDate!) : '-- -- , ----',
                   style: const TextStyle(color: AppTheme.textPrimary, fontSize: 16),
                 ),
                 if (subscription.expiryDate != null) ...[
@@ -664,11 +644,11 @@ class SubscriptionView extends GetView<SubscriptionController> {
             icon: Icon(
               Icons.arrow_forward_ios_outlined,
               size: 20,
-              color: subscription.licensesCount != 0 ? AppTheme.primaryBlue : AppTheme.textSecondary,
+              color: subscription.licensesCount.value != 0 ? AppTheme.primaryBlue : AppTheme.textSecondary,
             ),
             tooltip: 'Open Licenses',
-            color: subscription.licensesCount != 0 ? AppTheme.primaryBlue : AppTheme.textSecondary,
-            onTap: () => subscription.licensesCount != 0 ? controller.openLicenses(subscription) : null,
+            color: subscription.licensesCount.value != 0 ? AppTheme.primaryBlue : AppTheme.textSecondary,
+            onTap: () => subscription.licensesCount.value != 0 ? controller.openLicenses(subscription) : null,
           ),
         ],
       ),
@@ -751,11 +731,7 @@ class SubscriptionView extends GetView<SubscriptionController> {
         children: [
           Text(
             isActive.value ? 'Active' : 'Inactive',
-            style: TextStyle(
-              color: isActive.value ? AppTheme.accentGreen : AppTheme.errorRed,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-            ),
+            style: TextStyle(color: isActive.value ? AppTheme.accentGreen : AppTheme.errorRed, fontSize: 12, fontWeight: FontWeight.w600),
           ),
 
           Transform.scale(
@@ -781,12 +757,7 @@ class SubscriptionView extends GetView<SubscriptionController> {
     );
   }
 
-  Widget _buildActionButton({
-    required Widget icon,
-    required String tooltip,
-    required VoidCallback onTap,
-    Color? color,
-  }) {
+  Widget _buildActionButton({required Widget icon, required String tooltip, required VoidCallback onTap, Color? color}) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: Tooltip(
@@ -818,9 +789,7 @@ class SubscriptionView extends GetView<SubscriptionController> {
         children: [
           // Previous Button
           IconButton(
-            onPressed: controller.currentPage.value > 1
-                ? () => controller.changePage(controller.currentPage.value - 1)
-                : null,
+            onPressed: controller.currentPage.value > 1 ? () => controller.changePage(controller.currentPage.value - 1) : null,
             icon: const Icon(Icons.chevron_left),
             color: AppTheme.textPrimary,
             disabledColor: AppTheme.textTertiary,
@@ -846,9 +815,7 @@ class SubscriptionView extends GetView<SubscriptionController> {
                     decoration: BoxDecoration(
                       color: isSelected ? AppTheme.primaryBlue : Colors.transparent,
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: isSelected ? AppTheme.primaryBlue : AppTheme.borderColor.withValues(alpha: 0.3),
-                      ),
+                      border: Border.all(color: isSelected ? AppTheme.primaryBlue : AppTheme.borderColor.withValues(alpha: 0.3)),
                     ),
                     alignment: Alignment.center,
                     child: Text(

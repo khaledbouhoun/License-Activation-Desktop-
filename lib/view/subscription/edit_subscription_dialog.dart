@@ -24,12 +24,14 @@ class _EditSubscriptionDialogState extends State<EditSubscriptionDialog> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController maxDevicesController = TextEditingController();
   int initialDurationMonths = 6;
+  int selectedTypeApp = 0;
   SubscriptionStatus status = SubscriptionStatus.current;
   SubscriptionActive isActive = SubscriptionActive.active;
 
   @override
   void initState() {
     super.initState();
+    selectedTypeApp = widget.subscription.typeApp ?? 0;
     status = widget.subscription.status;
     isActive = widget.subscription.isActive;
     maxDevicesController.text = widget.subscription.maxDevices.toString();
@@ -45,15 +47,8 @@ class _EditSubscriptionDialogState extends State<EditSubscriptionDialog> {
         decoration: BoxDecoration(
           color: AppTheme.surfaceDark,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: AppTheme.borderColor.withValues(alpha: 0.3),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.5),
-              blurRadius: 20,
-            ),
-          ],
+          border: Border.all(color: AppTheme.borderColor.withValues(alpha: 0.3)),
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.5), blurRadius: 20)],
         ),
         child: Form(
           key: _formKey,
@@ -64,34 +59,32 @@ class _EditSubscriptionDialogState extends State<EditSubscriptionDialog> {
             children: [
               Text(
                 'Renew Subscription',
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.textPrimary,
-                ),
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppTheme.textPrimary),
               ),
 
               TextFieldFormWidget(
                 label: "Client",
-                ctrl: TextEditingController(
-                  text: widget.subscription.clientName,
-                ),
+                ctrl: TextEditingController(text: widget.subscription.clientName),
                 isNumeric: true,
                 isReadOnly: true,
               ),
               TextFieldFormWidget(
                 label: "Application",
-                ctrl: TextEditingController(
-                  text: widget.subscription.applicationName,
-                ),
+                ctrl: TextEditingController(text: widget.subscription.applicationName),
                 isNumeric: true,
                 isReadOnly: true,
               ),
               TextFieldFormWidget(
-                label: "Max Devices",
-                ctrl: maxDevicesController,
+                label: "Type Application",
+                ctrl: TextEditingController(
+                  text: 
+                      controller.typeAppList[controller.typeAppList.indexWhere((map) => map['id'] == widget.subscription.typeApp)]['name'],
+                ),
                 isNumeric: true,
+                isReadOnly: true,
               ),
+
+              TextFieldFormWidget(label: "Max Devices", ctrl: maxDevicesController, isNumeric: true),
               DurationSelector(
                 initialMonths: initialDurationMonths,
                 onChanged: (months) {
@@ -103,11 +96,7 @@ class _EditSubscriptionDialogState extends State<EditSubscriptionDialog> {
               SwitchListTile(
                 title: const Text("Active"),
                 value: isActive == SubscriptionActive.active,
-                onChanged: (val) => setState(
-                  () => isActive = val
-                      ? SubscriptionActive.active
-                      : SubscriptionActive.inactive,
-                ),
+                onChanged: (val) => setState(() => isActive = val ? SubscriptionActive.active : SubscriptionActive.inactive),
                 activeThumbColor: Colors.white,
                 activeTrackColor: AppTheme.accentGreen,
                 inactiveThumbColor: Colors.white,
@@ -120,10 +109,7 @@ class _EditSubscriptionDialogState extends State<EditSubscriptionDialog> {
                 children: [
                   TextButton(
                     onPressed: () => Get.back(),
-                    child: const Text(
-                      'Cancel',
-                      style: TextStyle(color: AppTheme.textSecondary),
-                    ),
+                    child: const Text('Cancel', style: TextStyle(color: AppTheme.textSecondary)),
                   ),
                   const SizedBox(width: 16),
                   ElevatedButton(
@@ -132,8 +118,7 @@ class _EditSubscriptionDialogState extends State<EditSubscriptionDialog> {
                         final subscription = widget.subscription.copyWith(
                           clientId: widget.subscription.clientId,
                           applicationId: widget.subscription.applicationId,
-                          maxDevices:
-                              int.tryParse(maxDevicesController.text) ?? 1,
+                          maxDevices: int.tryParse(maxDevicesController.text) ?? 1,
                           duration: initialDurationMonths,
                           isActive: isActive,
                         );
@@ -144,10 +129,7 @@ class _EditSubscriptionDialogState extends State<EditSubscriptionDialog> {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.primaryBlue,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 12,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                     ),
                     child: Text('Save'),
                   ),

@@ -15,6 +15,7 @@ class SubscriptionModel {
   final DateTime? startDate;
   final DateTime? expiryDate;
   final SubscriptionActive isActive;
+  final int typeApp;
   final DateTime createdAt;
   final DateTime updatedAt;
   RxInt licensesCount = 0.obs;
@@ -33,6 +34,7 @@ class SubscriptionModel {
     this.startDate,
     this.expiryDate,
     required this.isActive,
+    required this.typeApp,
     required this.createdAt,
     required this.updatedAt,
     required this.licensesCount,
@@ -54,6 +56,7 @@ class SubscriptionModel {
       startDate: json['start_date'] != null ? DateTime.parse(json['start_date']).toLocal() : null,
       expiryDate: json['expiry_date'] != null ? DateTime.parse(json['expiry_date']).toLocal() : null,
       isActive: isActiveVar == 1 ? SubscriptionActive.active : SubscriptionActive.inactive,
+      typeApp: json['type_app'] ?? 0,
       createdAt: DateTime.parse(json['created_at']).toLocal(),
       updatedAt: DateTime.parse(json['updated_at']).toLocal(),
       licensesCount: RxInt(json['licenses_count'] ?? 0),
@@ -67,6 +70,7 @@ class SubscriptionModel {
       'max_devices': maxDevices,
       'duration': duration,
       'is_active': isActive == SubscriptionActive.active ? 1 : 0,
+      'type_app': typeApp,
     };
   }
 
@@ -87,6 +91,7 @@ class SubscriptionModel {
     SubscriptionActive? isActive,
     DateTime? createdAt,
     DateTime? updatedAt,
+    int? typeApp,
   }) {
     return SubscriptionModel(
       id: id ?? this.id,
@@ -104,6 +109,7 @@ class SubscriptionModel {
       isActive: isActive ?? this.isActive,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      typeApp: typeApp ?? this.typeApp,
       licensesCount: licensesCount,
     );
   }
