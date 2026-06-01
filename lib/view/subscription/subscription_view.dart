@@ -129,7 +129,9 @@ class SubscriptionView extends GetView<SubscriptionController> {
     final loading = isLoading?.value ?? false;
 
     return MouseRegion(
-          cursor: loading ? SystemMouseCursors.wait : (onTap == null ? SystemMouseCursors.forbidden : SystemMouseCursors.click),
+          cursor: loading
+              ? SystemMouseCursors.wait
+              : (onTap == null ? SystemMouseCursors.forbidden : SystemMouseCursors.click),
           child: GestureDetector(
             onTap: loading ? null : onTap,
             child:
@@ -139,7 +141,9 @@ class SubscriptionView extends GetView<SubscriptionController> {
                       margin: const EdgeInsets.symmetric(horizontal: 10),
                       padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 13),
                       decoration: BoxDecoration(
-                        gradient: loading ? LinearGradient(colors: [Colors.grey.shade400, Colors.grey.shade500]) : gradient,
+                        gradient: loading
+                            ? LinearGradient(colors: [Colors.grey.shade400, Colors.grey.shade500])
+                            : gradient,
                         borderRadius: BorderRadius.circular(14),
                         boxShadow: loading ? [] : boxShadow,
                       ),
@@ -249,7 +253,13 @@ class SubscriptionView extends GetView<SubscriptionController> {
             ),
           ),
 
-          Expanded(flex: 2, child: Row(spacing: 30, children: [_buildFilterDropDownClients(), _buildFilterDropDownApplication()])),
+          Expanded(
+            flex: 2,
+            child: Row(
+              spacing: 30,
+              children: [_buildFilterDropDownYear(), _buildFilterDropDownClients(), _buildFilterDropDownApplication()],
+            ),
+          ),
 
           Expanded(flex: 1, child: _buildFilterDropDownDate()),
 
@@ -259,7 +269,12 @@ class SubscriptionView extends GetView<SubscriptionController> {
     ).animate().fadeIn(delay: 200.ms);
   }
 
-  Widget _buildFilterChip({required String label, required bool isSelected, required VoidCallback onTap, Color? color}) {
+  Widget _buildFilterChip({
+    required String label,
+    required bool isSelected,
+    required VoidCallback onTap,
+    Color? color,
+  }) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
@@ -328,7 +343,9 @@ class SubscriptionView extends GetView<SubscriptionController> {
       ),
       child: Obx(
         () => DropdownButton<ClientModel?>(
-          value: controller.clientController.clients.contains(controller.clientSelcted.value) ? controller.clientSelcted.value : null,
+          value: controller.clientController.clients.contains(controller.clientSelcted.value)
+              ? controller.clientSelcted.value
+              : null,
           hint: const Text("All Clients"),
           underline: const SizedBox(),
           dropdownColor: AppTheme.surfaceLight,
@@ -342,6 +359,34 @@ class SubscriptionView extends GetView<SubscriptionController> {
           ],
           onChanged: (value) {
             controller.clientSelcted.value = value;
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFilterDropDownYear() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        color: AppTheme.surfaceLight,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: AppTheme.borderColor.withValues(alpha: 0.3)),
+      ),
+      child: Obx(
+        () => DropdownButton<int?>(
+          value: controller.selectedYear.value,
+          hint: const Text("Year"),
+          underline: const SizedBox(),
+          dropdownColor: AppTheme.surfaceLight,
+          style: const TextStyle(color: AppTheme.textPrimary, fontSize: 14),
+          icon: const Icon(Icons.arrow_drop_down, color: AppTheme.textSecondary),
+          items: controller.years.map((year) {
+            return DropdownMenuItem<int?>(value: year, child: Text(year.toString()));
+          }).toList(),
+          onChanged: (value) {
+            controller.selectedYear.value = value!;
+            controller.applyFilters();
           },
         ),
       ),
@@ -404,7 +449,8 @@ class SubscriptionView extends GetView<SubscriptionController> {
                 Obx(
                   () => Checkbox(
                     value:
-                        controller.selectedIds.length == controller.getPaginatedSubscriptions().length && controller.selectedIds.isNotEmpty,
+                        controller.selectedIds.length == controller.getPaginatedSubscriptions().length &&
+                        controller.selectedIds.isNotEmpty,
                     onChanged: (val) => controller.selectAll(val ?? false),
                     activeColor: AppTheme.primaryBlue,
                   ),
@@ -413,6 +459,7 @@ class SubscriptionView extends GetView<SubscriptionController> {
                 _buildHeaderCell('License Key', flex: 3),
                 _buildHeaderCell('Devices', flex: 1),
                 _buildHeaderCell('Date Expiry', flex: 1),
+                _buildHeaderCell('Note', flex: 2),
                 _buildHeaderCell('Is Active', flex: 1),
                 _buildHeaderCell('Status', flex: 1),
                 _buildHeaderCell('Actions', flex: 1),
@@ -441,7 +488,8 @@ class SubscriptionView extends GetView<SubscriptionController> {
 
               return ListView.separated(
                 itemCount: subscriptions.length,
-                separatorBuilder: (context, index) => Divider(color: AppTheme.dividerColor.withValues(alpha: 0.3), height: 1),
+                separatorBuilder: (context, index) =>
+                    Divider(color: AppTheme.dividerColor.withValues(alpha: 0.3), height: 1),
                 itemBuilder: (context, index) {
                   final subscription = subscriptions[index];
                   return _buildTableRow(subscription, index);
@@ -459,7 +507,12 @@ class SubscriptionView extends GetView<SubscriptionController> {
       flex: flex,
       child: Text(
         text,
-        style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13, fontWeight: FontWeight.w600, letterSpacing: 0.5),
+        style: const TextStyle(
+          color: AppTheme.textSecondary,
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 0.5,
+        ),
       ),
     );
   }
@@ -549,7 +602,9 @@ class SubscriptionView extends GetView<SubscriptionController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  subscription.expiryDate != null ? DateFormat('MMM dd, yyyy').format(subscription.expiryDate!) : '-- -- , ----',
+                  subscription.expiryDate != null
+                      ? DateFormat('MMM dd, yyyy').format(subscription.expiryDate!)
+                      : '-- -- , ----',
                   style: const TextStyle(color: AppTheme.textPrimary, fontSize: 16),
                 ),
                 if (subscription.expiryDate != null) ...[
@@ -563,6 +618,16 @@ class SubscriptionView extends GetView<SubscriptionController> {
             ),
           ),
 
+          // Note
+          Expanded(
+            flex: 2,
+            child: Text(
+              subscription.note ?? '',
+              style: const TextStyle(color: AppTheme.textSecondary, fontSize: 14),
+              overflow: TextOverflow.visible,
+              softWrap: true,
+            ),
+          ),
           // Active
           Expanded(flex: 1, child: _buildActiveSwitch(subscription)),
 
@@ -577,9 +642,9 @@ class SubscriptionView extends GetView<SubscriptionController> {
                 // Edit button
                 _buildActionButton(
                   icon: Icon(Icons.subdirectory_arrow_left_rounded, size: 20, color: AppTheme.primaryBlue),
-                  tooltip: 'Edit',
+                  tooltip: 'Duplicate',
                   onTap: () {
-                    Get.dialog(EditSubscriptionDialog(subscription: subscription));
+                    Get.dialog(EditSubscriptionDialog(subscription: subscription, isDuplicate: true));
                   },
                 ),
                 const SizedBox(width: 6),
@@ -590,6 +655,9 @@ class SubscriptionView extends GetView<SubscriptionController> {
                   tooltip: 'More actions',
                   onSelected: (value) {
                     switch (value) {
+                      case 'edit':
+                        Get.dialog(EditSubscriptionDialog(subscription: subscription, isDuplicate: false));
+                        break;
                       case 'send_email':
                         controller.sendEmailReminder(subscription);
                         break;
@@ -603,6 +671,16 @@ class SubscriptionView extends GetView<SubscriptionController> {
                     }
                   },
                   itemBuilder: (BuildContext context) => [
+                    PopupMenuItem(
+                      value: 'edit',
+                      child: Row(
+                        children: [
+                          FaIcon(FontAwesomeIcons.penToSquare, size: 16, color: AppTheme.primaryBlue),
+                          SizedBox(width: 8),
+                          Text('Edit'),
+                        ],
+                      ),
+                    ),
                     PopupMenuItem(
                       value: 'send_email',
                       child: Row(
@@ -731,7 +809,11 @@ class SubscriptionView extends GetView<SubscriptionController> {
         children: [
           Text(
             isActive.value ? 'Active' : 'Inactive',
-            style: TextStyle(color: isActive.value ? AppTheme.accentGreen : AppTheme.errorRed, fontSize: 12, fontWeight: FontWeight.w600),
+            style: TextStyle(
+              color: isActive.value ? AppTheme.accentGreen : AppTheme.errorRed,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
           ),
 
           Transform.scale(
@@ -757,7 +839,12 @@ class SubscriptionView extends GetView<SubscriptionController> {
     );
   }
 
-  Widget _buildActionButton({required Widget icon, required String tooltip, required VoidCallback onTap, Color? color}) {
+  Widget _buildActionButton({
+    required Widget icon,
+    required String tooltip,
+    required VoidCallback onTap,
+    Color? color,
+  }) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: Tooltip(
@@ -789,7 +876,9 @@ class SubscriptionView extends GetView<SubscriptionController> {
         children: [
           // Previous Button
           IconButton(
-            onPressed: controller.currentPage.value > 1 ? () => controller.changePage(controller.currentPage.value - 1) : null,
+            onPressed: controller.currentPage.value > 1
+                ? () => controller.changePage(controller.currentPage.value - 1)
+                : null,
             icon: const Icon(Icons.chevron_left),
             color: AppTheme.textPrimary,
             disabledColor: AppTheme.textTertiary,
@@ -815,7 +904,9 @@ class SubscriptionView extends GetView<SubscriptionController> {
                     decoration: BoxDecoration(
                       color: isSelected ? AppTheme.primaryBlue : Colors.transparent,
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: isSelected ? AppTheme.primaryBlue : AppTheme.borderColor.withValues(alpha: 0.3)),
+                      border: Border.all(
+                        color: isSelected ? AppTheme.primaryBlue : AppTheme.borderColor.withValues(alpha: 0.3),
+                      ),
                     ),
                     alignment: Alignment.center,
                     child: Text(

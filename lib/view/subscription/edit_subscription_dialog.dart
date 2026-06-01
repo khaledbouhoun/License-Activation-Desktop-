@@ -7,11 +7,13 @@ import 'package:softel_control/core/constant/app_theme.dart';
 import 'package:softel_control/data/model/subscription_model.dart';
 import 'package:softel_control/widget/durationselector.dart';
 import 'package:softel_control/widget/textFeildForm.dart';
+import 'package:softel_control/widget/text_area_form.dart';
 
 class EditSubscriptionDialog extends StatefulWidget {
   final SubscriptionModel subscription;
+  final bool isDuplicate;
 
-  const EditSubscriptionDialog({super.key, required this.subscription});
+  const EditSubscriptionDialog({super.key, required this.subscription, required this.isDuplicate});
 
   @override
   State<EditSubscriptionDialog> createState() => _EditSubscriptionDialogState();
@@ -23,6 +25,7 @@ class _EditSubscriptionDialogState extends State<EditSubscriptionDialog> {
   final ApplicationController applicationController = Get.find();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController maxDevicesController = TextEditingController();
+  final TextEditingController noteController = TextEditingController();
   int initialDurationMonths = 6;
   int selectedTypeApp = 0;
   SubscriptionStatus status = SubscriptionStatus.current;
@@ -35,6 +38,7 @@ class _EditSubscriptionDialogState extends State<EditSubscriptionDialog> {
     status = widget.subscription.status;
     isActive = widget.subscription.isActive;
     maxDevicesController.text = widget.subscription.maxDevices.toString();
+    noteController.text = widget.subscription.note ?? '';
   }
 
   @override
@@ -77,26 +81,37 @@ class _EditSubscriptionDialogState extends State<EditSubscriptionDialog> {
               TextFieldFormWidget(
                 label: "Type Application",
                 ctrl: TextEditingController(
-                  text: 
-                      controller.typeAppList[controller.typeAppList.indexWhere((map) => map['id'] == widget.subscription.typeApp)]['name'],
+                  text:
+                      controller.typeAppList[controller.typeAppList.indexWhere(
+                        (map) => map['id'] == widget.subscription.typeApp,
+                      )]['name'],
                 ),
                 isNumeric: true,
                 isReadOnly: true,
               ),
 
-              TextFieldFormWidget(label: "Max Devices", ctrl: maxDevicesController, isNumeric: true),
+              TextFieldFormWidget(
+                label: "Max Devices",
+                ctrl: maxDevicesController,
+                isNumeric: true,
+                isReadOnly: !widget.isDuplicate,
+              ),
               DurationSelector(
                 initialMonths: initialDurationMonths,
                 onChanged: (months) {
                   initialDurationMonths = months;
                 },
+                isReadOnly: !widget.isDuplicate,
               ),
+              TextAreaFormWidget(label: "Note", ctrl: noteController),
               const SizedBox(height: 16),
               // active checkbox
               SwitchListTile(
                 title: const Text("Active"),
                 value: isActive == SubscriptionActive.active,
-                onChanged: (val) => setState(() => isActive = val ? SubscriptionActive.active : SubscriptionActive.inactive),
+                onChanged: widget.isDuplicate
+                    ? (val) => setState(() => isActive = val ? SubscriptionActive.active : SubscriptionActive.inactive)
+                    : null,
                 activeThumbColor: Colors.white,
                 activeTrackColor: AppTheme.accentGreen,
                 inactiveThumbColor: Colors.white,
@@ -121,10 +136,15 @@ class _EditSubscriptionDialogState extends State<EditSubscriptionDialog> {
                           maxDevices: int.tryParse(maxDevicesController.text) ?? 1,
                           duration: initialDurationMonths,
                           isActive: isActive,
+                          note: noteController.text.isNotEmpty ? noteController.text : widget.subscription.note,
                         );
 
                         Get.back();
-                        await controller.addSubscription(subscription);
+                        if (widget.isDuplicate) {
+                          await controller.addSubscription(subscription);
+                        } else {
+                          await controller.editSubscription(subscription);
+                        }
                       }
                     },
                     style: ElevatedButton.styleFrom(

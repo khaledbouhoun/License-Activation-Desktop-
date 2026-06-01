@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:softel_control/controller/application_controller.dart';
 import 'package:softel_control/controller/client_controller.dart';
 import 'package:softel_control/controller/subscription_controller.dart';
 import 'package:softel_control/core/constant/app_theme.dart';
+import 'package:softel_control/data/model/application_model.dart';
 import 'package:softel_control/data/model/client_model.dart';
 import 'package:softel_control/data/model/subscription_model.dart';
-import 'package:softel_control/data/model/application_model.dart';
 import 'package:softel_control/widget/durationselector.dart';
-import 'package:softel_control/widget/textFeildForm.dart';
+import 'package:softel_control/widget/text_area_form.dart';
+import 'package:softel_control/widget/textfeildform.dart';
 
 class AddEditSubscriptionDialog extends StatefulWidget {
   const AddEditSubscriptionDialog({super.key});
@@ -27,6 +27,7 @@ class _AddEditSubscriptionDialogState extends State<AddEditSubscriptionDialog> {
   ApplicationModel? selectedApplication;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController maxDevicesController = TextEditingController();
+  final TextEditingController noteController = TextEditingController();
   int initialDurationMonths = 6;
   SubscriptionStatus status = SubscriptionStatus.current;
   SubscriptionActive isActive = SubscriptionActive.active;
@@ -85,6 +86,7 @@ class _AddEditSubscriptionDialogState extends State<AddEditSubscriptionDialog> {
               _buildApplicationDropdown(),
               _buildTypeAppDropdown(),
               TextFieldFormWidget(label: "Max Devices", ctrl: maxDevicesController, isNumeric: true),
+              TextAreaFormWidget(label: "Note", ctrl: noteController),
               DurationSelector(
                 initialMonths: initialDurationMonths,
                 onChanged: (months) {
@@ -112,6 +114,7 @@ class _AddEditSubscriptionDialogState extends State<AddEditSubscriptionDialog> {
                           duration: initialDurationMonths,
                           isActive: isActive,
                           typeApp: controller.selectedTypeApp.value,
+                          note: noteController.text.isNotEmpty ? noteController.text : null,
                         );
 
                         controller.addSubscription(subscription);

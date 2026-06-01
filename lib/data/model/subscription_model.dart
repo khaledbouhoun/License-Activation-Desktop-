@@ -18,6 +18,7 @@ class SubscriptionModel {
   final int typeApp;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final String? note;
   RxInt licensesCount = 0.obs;
 
   SubscriptionModel({
@@ -37,7 +38,8 @@ class SubscriptionModel {
     required this.typeApp,
     required this.createdAt,
     required this.updatedAt,
-    required this.licensesCount,
+    this.note,
+      required this.licensesCount,
   });
 
   factory SubscriptionModel.fromJson(Map<String, dynamic> json) {
@@ -56,6 +58,7 @@ class SubscriptionModel {
       startDate: json['start_date'] != null ? DateTime.parse(json['start_date']).toLocal() : null,
       expiryDate: json['expiry_date'] != null ? DateTime.parse(json['expiry_date']).toLocal() : null,
       isActive: isActiveVar == 1 ? SubscriptionActive.active : SubscriptionActive.inactive,
+      note: json['note']?.toString(),
       typeApp: json['type_app'] ?? 0,
       createdAt: DateTime.parse(json['created_at']).toLocal(),
       updatedAt: DateTime.parse(json['updated_at']).toLocal(),
@@ -71,6 +74,7 @@ class SubscriptionModel {
       'duration': duration,
       'is_active': isActive == SubscriptionActive.active ? 1 : 0,
       'type_app': typeApp,
+      'note': note,
     };
   }
 
@@ -92,6 +96,7 @@ class SubscriptionModel {
     DateTime? createdAt,
     DateTime? updatedAt,
     int? typeApp,
+      String? note,
   }) {
     return SubscriptionModel(
       id: id ?? this.id,
@@ -110,6 +115,7 @@ class SubscriptionModel {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       typeApp: typeApp ?? this.typeApp,
+      note: note,
       licensesCount: licensesCount,
     );
   }

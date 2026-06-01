@@ -3,10 +3,10 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:softel_control/controller/dashboard_controller.dart';
 import 'package:softel_control/core/constant/app_theme.dart';
+import 'package:softel_control/view/application/application_view.dart';
+import 'package:softel_control/view/client/client_view.dart';
 import 'package:softel_control/view/dashboard/dashboard_view.dart';
 import 'package:softel_control/view/subscription/subscription_view.dart';
-import 'package:softel_control/view/client/client_view.dart';
-import 'package:softel_control/view/application/application_view.dart';
 import 'package:softel_control/widget/modrentopbar.dart';
 
 class MainScreen extends GetView<DashboardController> {
@@ -33,9 +33,7 @@ class MainScreen extends GetView<DashboardController> {
                             () => AnimatedSwitcher(
                               duration: const Duration(milliseconds: 300),
                               child: KeyedSubtree(
-                                key: ValueKey<int>(
-                                  controller.selectedIndex.value,
-                                ),
+                                key: ValueKey<int>(controller.selectedIndex.value),
                                 child: _getSelectedView(),
                               ),
                             ),
@@ -59,12 +57,7 @@ class MainScreen extends GetView<DashboardController> {
       width: 80,
       decoration: BoxDecoration(
         color: AppTheme.surfaceDark.withValues(alpha: 0.5),
-        border: Border(
-          right: BorderSide(
-            color: AppTheme.borderColor.withValues(alpha: 0.3),
-            width: 1,
-          ),
-        ),
+        border: Border(right: BorderSide(color: AppTheme.borderColor.withValues(alpha: 0.3), width: 1)),
       ),
       child: Column(
         children: [
@@ -80,11 +73,7 @@ class MainScreen extends GetView<DashboardController> {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: AppTheme.glowShadow,
               ),
-              child: const Icon(
-                Icons.shield_outlined,
-                color: Colors.white,
-                size: 28,
-              ),
+              child: const Icon(Icons.shield_outlined, color: Colors.white, size: 28),
             ),
           ).animate().fadeIn(duration: 600.ms).scale(delay: 200.ms),
 
@@ -95,26 +84,10 @@ class MainScreen extends GetView<DashboardController> {
             child: Obx(
               () => ListView(
                 children: [
-                  _buildNavItem(
-                    icon: Icons.dashboard_outlined,
-                    label: 'Dashboard',
-                    route: '/dashboard',
-                  ),
-                  _buildNavItem(
-                    icon: Icons.card_membership_outlined,
-                    label: 'Subscriptions',
-                    route: '/subscriptions',
-                  ),
-                  _buildNavItem(
-                    icon: Icons.people_outline,
-                    label: 'Clients',
-                    route: '/clients',
-                  ),
-                  _buildNavItem(
-                    icon: Icons.apps_outlined,
-                    label: 'Applications',
-                    route: '/applications',
-                  ),
+                  _buildNavItem(icon: Icons.dashboard_outlined, label: 'Dashboard', route: '/dashboard'),
+                  _buildNavItem(icon: Icons.card_membership_outlined, label: 'Subscriptions', route: '/subscriptions'),
+                  _buildNavItem(icon: Icons.people_outline, label: 'Clients', route: '/clients'),
+                  _buildNavItem(icon: Icons.apps_outlined, label: 'Applications', route: '/applications'),
 
                   // _buildNavItem(
                   //   icon: Icons.settings_outlined,
@@ -135,15 +108,9 @@ class MainScreen extends GetView<DashboardController> {
               decoration: BoxDecoration(
                 color: AppTheme.surfaceLight,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: AppTheme.primaryBlue.withValues(alpha: 0.3),
-                  width: 2,
-                ),
+                border: Border.all(color: AppTheme.primaryBlue.withValues(alpha: 0.3), width: 2),
               ),
-              child: const Icon(
-                Icons.person_outline,
-                color: AppTheme.primaryBlue,
-              ),
+              child: const Icon(Icons.person_outline, color: AppTheme.primaryBlue),
             ),
           ).animate().fadeIn(delay: 400.ms),
         ],
@@ -151,11 +118,7 @@ class MainScreen extends GetView<DashboardController> {
     );
   }
 
-  Widget _buildNavItem({
-    required IconData icon,
-    required String label,
-    required String route,
-  }) {
+  Widget _buildNavItem({required IconData icon, required String label, required String route}) {
     bool isSelected = controller.selectedRoute.value == route;
     return Tooltip(
       message: label,
@@ -172,25 +135,13 @@ class MainScreen extends GetView<DashboardController> {
                     width: 56,
                     height: 56,
                     decoration: BoxDecoration(
-                      color: isSelected
-                          ? AppTheme.primaryBlue.withAlpha(40)
-                          : Colors.transparent,
+                      color: isSelected ? AppTheme.primaryBlue.withAlpha(40) : Colors.transparent,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Icon(
-                      icon,
-                      color: isSelected
-                          ? AppTheme.primaryBlue
-                          : AppTheme.textSecondary,
-                      size: 28,
-                    ),
+                    child: Icon(icon, color: isSelected ? AppTheme.primaryBlue : AppTheme.textSecondary, size: 28),
                   )
                   .animate(target: isSelected ? 1 : 0)
-                  .scale(
-                    begin: const Offset(1, 1),
-                    end: const Offset(1.05, 1.05),
-                    duration: 200.ms,
-                  ),
+                  .scale(begin: const Offset(1, 1), end: const Offset(1.05, 1.05), duration: 200.ms),
           // }),
         ),
       ),
@@ -203,12 +154,7 @@ class MainScreen extends GetView<DashboardController> {
       height: 80,
       decoration: BoxDecoration(
         color: AppTheme.surfaceDark.withValues(alpha: 0.3),
-        border: Border(
-          bottom: BorderSide(
-            color: AppTheme.borderColor.withValues(alpha: 0.3),
-            width: 1,
-          ),
-        ),
+        border: Border(bottom: BorderSide(color: AppTheme.borderColor.withValues(alpha: 0.3), width: 1)),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -226,9 +172,7 @@ class MainScreen extends GetView<DashboardController> {
               decoration: BoxDecoration(
                 color: AppTheme.surfaceLight.withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: AppTheme.borderColor.withValues(alpha: 0.3),
-                ),
+                border: Border.all(color: AppTheme.borderColor.withValues(alpha: 0.3)),
               ),
               child: TextField(
                 onChanged: controller.updateSearchQuery,
@@ -236,15 +180,9 @@ class MainScreen extends GetView<DashboardController> {
                 decoration: InputDecoration(
                   hintText: 'Search...',
                   hintStyle: TextStyle(color: AppTheme.textTertiary),
-                  prefixIcon: const Icon(
-                    Icons.search,
-                    color: AppTheme.textTertiary,
-                  ),
+                  prefixIcon: const Icon(Icons.search, color: AppTheme.textTertiary),
                   border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
-                  ),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 ),
               ),
             ).animate().fadeIn(delay: 200.ms),
@@ -271,11 +209,7 @@ class MainScreen extends GetView<DashboardController> {
         const SizedBox(width: 8),
         Text(
           breadcrumbs[controller.selectedIndex.value],
-          style: const TextStyle(
-            color: AppTheme.textPrimary,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+          style: const TextStyle(color: AppTheme.textPrimary, fontSize: 16, fontWeight: FontWeight.w600),
         ),
       ],
     );
@@ -298,19 +232,11 @@ class MainScreen extends GetView<DashboardController> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.construction_outlined,
-                size: 64,
-                color: AppTheme.textTertiary,
-              ),
+              Icon(Icons.construction_outlined, size: 64, color: AppTheme.textTertiary),
               const SizedBox(height: 16),
               Text(
                 'Coming Soon',
-                style: TextStyle(
-                  color: AppTheme.textSecondary,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(color: AppTheme.textSecondary, fontSize: 20, fontWeight: FontWeight.w600),
               ),
             ],
           ),

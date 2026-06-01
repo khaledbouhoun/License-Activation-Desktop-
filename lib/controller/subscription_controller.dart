@@ -29,6 +29,7 @@ class SubscriptionController extends GetxController {
   // Client
   Rx<ClientModel?> clientSelcted = Rx<ClientModel?>(null);
   Rx<ApplicationModel?> applicationSelcted = Rx<ApplicationModel?>(null);
+  RxInt selectedYear = RxInt(DateTime.now().year);
 
   // Pagination
   final RxInt currentPage = 1.obs;
@@ -52,6 +53,17 @@ class SubscriptionController extends GetxController {
     {'id': 2, 'name': 'Conception'},
   ];
 
+  List<int> get years {
+    List<int> years = [];
+    for (var sub in subscriptions) {
+      if (!years.contains(sub.createdAt.year)) {
+        years.add(sub.createdAt.year);
+      }
+    }
+    years.sort((a, b) => b.compareTo(a));
+    return years;
+  }
+
   @override
   void onInit() {
     super.onInit();
@@ -62,6 +74,13 @@ class SubscriptionController extends GetxController {
     ever(applicationSelcted, (_) => applyFilters());
     ever(filterStatus, (_) => applyFilters());
     ever(sortBy, (_) => applyFilters());
+    ever(selectedYear, (_) => applyFilters());
+  }
+
+  @override
+  void onReady() {
+    selectedYear.value = DateTime.now().year;
+    applyFilters();
   }
 
   // Selection Methods
@@ -107,7 +126,11 @@ class SubscriptionController extends GetxController {
         subscriptions.value = data.map((json) => SubscriptionModel.fromJson(json)).toList();
         applyFilters();
       } else {
-        Get.snackbar('Error', 'Failed to load subscriptions: ${response.statusCode}', snackPosition: SnackPosition.BOTTOM);
+        Get.snackbar(
+          'Error',
+          'Failed to load subscriptions: ${response.statusCode}',
+          snackPosition: SnackPosition.BOTTOM,
+        );
       }
     } catch (e) {
       print("Error loading subscriptions: $e");
@@ -135,6 +158,9 @@ class SubscriptionController extends GetxController {
     if (applicationSelcted.value != null) {
       filtered = filtered.where((sub) => sub.applicationId == applicationSelcted.value!.id).toList();
     }
+
+    // Filter by year
+    filtered = filtered.where((sub) => sub.createdAt.year == selectedYear.value).toList();
 
     // Sort
     if (sortBy.value == 'date') {
@@ -315,7 +341,9 @@ class SubscriptionController extends GetxController {
     final bool isExpired = sub.status == SubscriptionStatus.expired;
     final String accentColor = isExpired ? '#dc2626' : '#ea580c';
     final String statusLabel = isExpired ? 'ABONNEMENT EXPIRÉ' : 'Expire Bientôt';
-    final String statusMessage = isExpired ? 'Votre abonnement a expiré' : 'Votre abonnement expire dans ${sub.daysUntilExpiry} jours';
+    final String statusMessage = isExpired
+        ? 'Votre abonnement a expiré'
+        : 'Votre abonnement expire dans ${sub.daysUntilExpiry} jours';
     final int currentYear = DateTime.now().year;
 
     // NOTE: Every ${ } below is a real Dart interpolation.

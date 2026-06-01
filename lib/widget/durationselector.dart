@@ -7,12 +7,8 @@ import 'package:softel_control/core/constant/app_theme.dart';
 class DurationSelector extends StatefulWidget {
   final int? initialMonths;
   final Function(int months) onChanged;
-
-  const DurationSelector({
-    super.key,
-    this.initialMonths,
-    required this.onChanged,
-  });
+  final bool isReadOnly;
+  const DurationSelector({super.key, this.initialMonths, required this.onChanged, this.isReadOnly = false});
 
   @override
   State<DurationSelector> createState() => _DurationSelectorState();
@@ -38,9 +34,7 @@ class _DurationSelectorState extends State<DurationSelector> {
     } else if (years < 1) {
       return "$months Months";
     } else {
-      String expersion = years % 1 == 0
-          ? years.toInt().toString()
-          : years.toStringAsFixed(1);
+      String expersion = years % 1 == 0 ? years.toInt().toString() : years.toStringAsFixed(1);
       return "$expersion Years";
     }
   }
@@ -58,6 +52,7 @@ class _DurationSelectorState extends State<DurationSelector> {
               label: Text(label(months)),
               selected: isSelected,
               onSelected: (_) {
+                if (widget.isReadOnly) return;
                 customController.clear();
                 setState(() => selected = months);
                 widget.onChanged(months);
@@ -65,14 +60,11 @@ class _DurationSelectorState extends State<DurationSelector> {
             );
           }).toList()..add(
             ChoiceChip(
-              label: Text(
-                customController.text.isEmpty
-                    ? "Custom"
-                    : "${label(int.parse(customController.text))} ",
-              ),
+              label: Text(customController.text.isEmpty ? "Custom" : "${label(int.parse(customController.text))} "),
               selectedColor: AppTheme.primaryBlue,
               selected: customController.text.isNotEmpty,
               onSelected: (_) {
+                if (widget.isReadOnly) return;
                 showDialog(
                   context: context,
                   builder: (context) {
@@ -86,13 +78,9 @@ class _DurationSelectorState extends State<DurationSelector> {
                             child: TextField(
                               controller: customController,
                               onChanged: (value) {
-                                customLabel.value = label(
-                                  int.parse(value.isEmpty ? "0" : value),
-                                );
+                                customLabel.value = label(int.parse(value.isEmpty ? "0" : value));
                               },
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
+                              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                               decoration: InputDecoration(labelText: "Months"),
                             ),
                           ),
@@ -111,15 +99,10 @@ class _DurationSelectorState extends State<DurationSelector> {
                         ],
                       ),
                       actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: Text("Cancel"),
-                        ),
+                        TextButton(onPressed: () => Navigator.pop(context), child: Text("Cancel")),
                         TextButton(
                           onPressed: () {
-                            setState(
-                              () => selected = int.parse(customController.text),
-                            );
+                            setState(() => selected = int.parse(customController.text));
                             widget.onChanged(int.parse(customController.text));
                             Navigator.pop(context);
                           },

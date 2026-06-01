@@ -184,7 +184,7 @@ class LoginScreen extends GetView<AuthController> {
             return 'Please enter your password';
           }
 
-          if (value.toLowerCase() != " ") {
+          if (value.toLowerCase() != "softel2026") {
             return 'Incorrect password';
           }
           return null;
